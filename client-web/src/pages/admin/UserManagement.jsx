@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -23,91 +23,14 @@ import { ProgressBar } from 'primereact/progressbar';
 import { Skeleton } from 'primereact/skeleton';
 import { TabView, TabPanel } from 'primereact/tabview';
 import PageLayout from '../../components/admin/PageLayout';
+import { fetchGet, fetchPost } from '../../utils/fetch.utils';
 
 const UserManagement = () => {
-	// Static user data with enhanced fields
-	const [users, setUsers] = useState([
-		{
-			id: 1,
-			name: 'John Doe',
-			email: 'john@example.com',
-			role: 'Employee',
-			department: 'IT',
-			manager: 'Alice Smith',
-			isManagerApprover: false,
-			status: 'Active',
-			avatar: null,
-			createdAt: '2024-01-15',
-			lastLogin: '2025-10-03',
-			phone: '+1 (555) 123-4567',
-			location: 'New York, NY',
-			jobTitle: 'Software Engineer',
-		},
-		{
-			id: 2,
-			name: 'Alice Smith',
-			email: 'alice@example.com',
-			role: 'Manager',
-			department: 'Finance',
-			manager: '-',
-			isManagerApprover: true,
-			status: 'Active',
-			avatar: null,
-			createdAt: '2023-06-20',
-			lastLogin: '2025-10-04',
-			phone: '+1 (555) 234-5678',
-			location: 'Chicago, IL',
-			jobTitle: 'Finance Manager',
-		},
-		{
-			id: 3,
-			name: 'Bob Johnson',
-			email: 'bob@example.com',
-			role: 'Employee',
-			department: 'HR',
-			manager: 'Alice Smith',
-			isManagerApprover: false,
-			status: 'Inactive',
-			avatar: null,
-			createdAt: '2024-03-10',
-			lastLogin: '2025-09-20',
-			phone: '+1 (555) 345-6789',
-			location: 'Austin, TX',
-			jobTitle: 'HR Specialist',
-		},
-		{
-			id: 4,
-			name: 'Sarah Williams',
-			email: 'sarah@example.com',
-			role: 'Manager',
-			department: 'Marketing',
-			manager: '-',
-			isManagerApprover: true,
-			status: 'Active',
-			avatar: null,
-			createdAt: '2023-11-05',
-			lastLogin: '2025-10-04',
-			phone: '+1 (555) 456-7890',
-			location: 'San Francisco, CA',
-			jobTitle: 'Marketing Director',
-		},
-		{
-			id: 5,
-			name: 'Mike Chen',
-			email: 'mike@example.com',
-			role: 'Employee',
-			department: 'IT',
-			manager: 'Alice Smith',
-			isManagerApprover: false,
-			status: 'Active',
-			avatar: null,
-			createdAt: '2024-07-12',
-			lastLogin: '2025-10-02',
-			phone: '+1 (555) 567-8901',
-			location: 'Boston, MA',
-			jobTitle: 'DevOps Engineer',
-		},
-	]);
+	// State for users data
+	const [users, setUsers] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [tableLoading, setTableLoading] = useState(false);
+	const [actionLoading, setActionLoading] = useState(false);
 
 	// Theme configuration
 	const theme = {
@@ -126,6 +49,7 @@ const UserManagement = () => {
 	const roles = [
 		{ label: 'Employee', value: 'Employee', icon: 'pi-user' },
 		{ label: 'Manager', value: 'Manager', icon: 'pi-users' },
+		{ label: 'Admin', value: 'Admin', icon: 'pi-shield' },
 	];
 	const statuses = [
 		{ label: 'Active', value: 'Active', icon: 'pi-check-circle' },
@@ -139,44 +63,13 @@ const UserManagement = () => {
 		{ label: 'Sales', value: 'Sales', icon: 'pi-shopping-cart' },
 		{ label: 'Operations', value: 'Operations', icon: 'pi-cog' },
 	];
-	const jobTitles = [
-		'Software Engineer',
-		'Finance Manager',
-		'HR Specialist',
-		'Marketing Director',
-		'DevOps Engineer',
-		'Product Manager',
-		'Data Analyst',
-		'UX Designer',
-	];
-
-	const managers = users
-		.filter((u) => u.role === 'Manager')
-		.map((m) => ({ label: m.name, value: m.name, email: m.email }));
 
 	const [selectedRole, setSelectedRole] = useState(null);
 	const [selectedStatus, setSelectedStatus] = useState(null);
 	const [selectedDept, setSelectedDept] = useState(null);
 	const [globalFilter, setGlobalFilter] = useState('');
 	const [selectedUsers, setSelectedUsers] = useState([]);
-	const [loading, setLoading] = useState(false);
-	const [viewMode, setViewMode] = useState('table'); // 'table' or 'grid'
-
-	const filteredUsers = users.filter((user) => {
-		const matchesGlobal =
-			!globalFilter ||
-			user.name.toLowerCase().includes(globalFilter.toLowerCase()) ||
-			user.email.toLowerCase().includes(globalFilter.toLowerCase()) ||
-			user.department.toLowerCase().includes(globalFilter.toLowerCase()) ||
-			user.jobTitle.toLowerCase().includes(globalFilter.toLowerCase());
-
-		return (
-			matchesGlobal &&
-			(!selectedRole || user.role === selectedRole) &&
-			(!selectedStatus || user.status === selectedStatus) &&
-			(!selectedDept || user.department === selectedDept)
-		);
-	});
+	const [viewMode, setViewMode] = useState('table');
 
 	// Modal states
 	const [showUserDialog, setShowUserDialog] = useState(false);
@@ -187,9 +80,9 @@ const UserManagement = () => {
 		name: '',
 		email: '',
 		password: '',
-		role: null,
-		department: null,
-		manager: null,
+		role: 'Employee',
+		department: '',
+		manager: '',
 		isManagerApprover: false,
 		phone: '',
 		location: '',
@@ -200,6 +93,236 @@ const UserManagement = () => {
 	const [activeTab, setActiveTab] = useState(0);
 	const toastRef = useRef(null);
 
+	// Get managers list from current users
+	const managers = users
+		.filter((u) => u.role === 'Manager' && u.status === 'Active')
+		.map((m) => ({ label: m.name, value: m.id, email: m.email }));
+
+	// Filter users based on selected filters
+	const filteredUsers = users.filter((user) => {
+		const matchesGlobal =
+			!globalFilter ||
+			user.name?.toLowerCase().includes(globalFilter.toLowerCase()) ||
+			user.email?.toLowerCase().includes(globalFilter.toLowerCase()) ||
+			user.department?.toLowerCase().includes(globalFilter.toLowerCase()) ||
+			user.jobTitle?.toLowerCase().includes(globalFilter.toLowerCase());
+
+		return (
+			matchesGlobal &&
+			(!selectedRole || user.role === selectedRole) &&
+			(!selectedStatus || user.status === selectedStatus) &&
+			(!selectedDept || user.department === selectedDept)
+		);
+	});
+
+	// API Functions
+	const fetchUsers = useCallback(async () => {
+		setTableLoading(true);
+		try {
+			const response = await fetchGet({ pathName: 'admin/users' });
+			if (response.success) {
+				setUsers(response.users || []);
+			} else {
+				showToast('error', 'Error', response.message || 'Failed to fetch users');
+			}
+		} catch (error) {
+			showToast('error', 'Error', 'Failed to fetch users');
+			console.error('Error fetching users:', error);
+		} finally {
+			setLoading(false);
+			setTableLoading(false);
+		}
+	}, []);
+
+	const createUser = async (userData) => {
+		setActionLoading(true);
+		try {
+			const response = await fetchPost({
+				pathName: 'admin/users',
+				body: JSON.stringify(userData),
+			});
+
+			if (response.success) {
+				showToast('success', 'Success', 'User created successfully');
+				await fetchUsers();
+				return true;
+			} else {
+				showToast('error', 'Error', response.message || 'Failed to create user');
+				return false;
+			}
+		} catch (error) {
+			showToast('error', 'Error', 'Failed to create user');
+			console.error('Error creating user:', error);
+			return false;
+		} finally {
+			setActionLoading(false);
+		}
+	};
+
+	const updateUser = async (userId, userData) => {
+		setActionLoading(true);
+		try {
+			const response = await fetchPost({
+				pathName: `admin/users/${userId}`,
+				body: JSON.stringify(userData),
+				method: 'PATCH',
+			});
+
+			if (response.success) {
+				showToast('success', 'Success', 'User updated successfully');
+				await fetchUsers();
+				return true;
+			} else {
+				showToast('error', 'Error', response.message || 'Failed to update user');
+				return false;
+			}
+		} catch (error) {
+			showToast('error', 'Error', 'Failed to update user');
+			console.error('Error updating user:', error);
+			return false;
+		} finally {
+			setActionLoading(false);
+		}
+	};
+
+	const deleteUser = async (userId) => {
+		setActionLoading(true);
+		try {
+			const response = await fetchPost({
+				pathName: `admin/users/${userId}`,
+				method: 'DELETE',
+			});
+
+			if (response.success) {
+				showToast('success', 'Success', 'User deleted successfully');
+				await fetchUsers();
+				return true;
+			} else {
+				showToast('error', 'Error', response.message || 'Failed to delete user');
+				return false;
+			}
+		} catch (error) {
+			showToast('error', 'Error', 'Failed to delete user');
+			console.error('Error deleting user:', error);
+			return false;
+		} finally {
+			setActionLoading(false);
+		}
+	};
+
+	const toggleUserStatus = async (userId, currentStatus) => {
+		setActionLoading(true);
+		try {
+			const response = await fetchPost({
+				pathName: `admin/users/${userId}/toggle-status`,
+				body: JSON.stringify({}),
+				method: 'PATCH',
+			});
+
+			if (response.success) {
+				showToast(
+					'success',
+					'Success',
+					`User ${currentStatus === 'Active' ? 'deactivated' : 'activated'} successfully`
+				);
+				await fetchUsers();
+				return true;
+			} else {
+				showToast('error', 'Error', response.message || 'Failed to update user status');
+				return false;
+			}
+		} catch (error) {
+			showToast('error', 'Error', 'Failed to update user status');
+			console.error('Error updating user status:', error);
+			return false;
+		} finally {
+			setActionLoading(false);
+		}
+	};
+
+	const resetPassword = async (userId) => {
+		setActionLoading(true);
+		try {
+			const response = await fetchPost({
+				pathName: `admin/users/${userId}/reset-password`,
+				method: 'PATCH',
+			});
+
+			if (response.success) {
+				showToast('success', 'Success', 'Password reset email sent successfully');
+				return true;
+			} else {
+				showToast('error', 'Error', response.message || 'Failed to reset password');
+				return false;
+			}
+		} catch (error) {
+			showToast('error', 'Error', 'Failed to reset password');
+			console.error('Error resetting password:', error);
+			return false;
+		} finally {
+			setActionLoading(false);
+		}
+	};
+
+	const bulkImportUsers = async (file) => {
+		setActionLoading(true);
+		try {
+			// Parse CSV file content
+			const text = await file.text();
+			const lines = text.split('\n').filter((line) => line.trim());
+
+			if (lines.length < 2) {
+				showToast(
+					'error',
+					'Error',
+					'CSV file must contain headers and at least one data row'
+				);
+				return false;
+			}
+
+			// Parse CSV headers and data
+			const headers = lines[0].split(',').map((h) => h.trim().toLowerCase());
+			const users = [];
+
+			for (let i = 1; i < lines.length; i++) {
+				const values = lines[i].split(',').map((v) => v.trim());
+				if (values.length === headers.length) {
+					const user = {};
+					headers.forEach((header, index) => {
+						user[header] = values[index];
+					});
+					users.push(user);
+				}
+			}
+
+			const response = await fetchPost({
+				pathName: 'admin/users/bulk-import',
+				body: JSON.stringify({ users }),
+			});
+
+			if (response.success) {
+				showToast(
+					'success',
+					'Success',
+					response.message ||
+						`${response.results?.successful || 0} users imported successfully`
+				);
+				await fetchUsers();
+				return true;
+			} else {
+				showToast('error', 'Error', response.message || 'Failed to import users');
+				return false;
+			}
+		} catch (error) {
+			showToast('error', 'Error', 'Failed to import users');
+			console.error('Error importing users:', error);
+			return false;
+		} finally {
+			setActionLoading(false);
+		}
+	};
+
+	// Toast function
 	const showToast = (severity, summary, detail) => {
 		toastRef.current?.show({ severity, summary, detail, life: 3000 });
 	};
@@ -209,30 +332,22 @@ const UserManagement = () => {
 		const colors = [
 			{
 				background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-				label: name.charAt(0).toUpperCase(),
+				label: name?.charAt(0)?.toUpperCase() || 'U',
 			},
 			{
 				background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-				label: name.charAt(0).toUpperCase(),
+				label: name?.charAt(0)?.toUpperCase() || 'U',
 			},
 			{
 				background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-				label: name.charAt(0).toUpperCase(),
+				label: name?.charAt(0)?.toUpperCase() || 'U',
 			},
 			{
 				background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-				label: name.charAt(0).toUpperCase(),
-			},
-			{
-				background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-				label: name.charAt(0).toUpperCase(),
-			},
-			{
-				background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-				label: name.charAt(0).toUpperCase(),
+				label: name?.charAt(0)?.toUpperCase() || 'U',
 			},
 		];
-		const index = name.charCodeAt(0) % colors.length;
+		const index = (name?.charCodeAt(0) || 0) % colors.length;
 		return colors[index];
 	};
 
@@ -242,9 +357,9 @@ const UserManagement = () => {
 			name: '',
 			email: '',
 			password: '',
-			role: null,
-			department: null,
-			manager: null,
+			role: 'Employee',
+			department: '',
+			manager: '',
 			isManagerApprover: false,
 			phone: '',
 			location: '',
@@ -257,16 +372,16 @@ const UserManagement = () => {
 		if (user) {
 			setEditingUser(user);
 			setUserForm({
-				name: user.name,
-				email: user.email,
+				name: user.name || '',
+				email: user.email || '',
 				password: '',
-				role: user.role,
-				department: user.department,
-				manager: user.manager,
-				isManagerApprover: user.isManagerApprover,
-				phone: user.phone,
-				location: user.location,
-				jobTitle: user.jobTitle,
+				role: user.role || 'Employee',
+				department: user.department || '',
+				manager: user.managerId || user.manager || '',
+				isManagerApprover: user.isManagerApprover || false,
+				phone: user.phone || '',
+				location: user.location || '',
+				jobTitle: user.jobTitle || '',
 			});
 		} else {
 			setEditingUser(null);
@@ -282,40 +397,46 @@ const UserManagement = () => {
 	};
 
 	// Save user
-	const saveUser = () => {
-		setLoading(true);
-		// Simulate API call
-		setTimeout(() => {
-			const updatedUsers = [...users];
-			if (editingUser) {
-				const index = updatedUsers.findIndex((u) => u.id === editingUser.id);
-				updatedUsers[index] = {
-					...updatedUsers[index],
-					...userForm,
-					lastLogin: updatedUsers[index].lastLogin,
-				};
-			} else {
-				const newId = Math.max(...updatedUsers.map((u) => u.id)) + 1;
-				updatedUsers.push({
-					id: newId,
-					status: 'Active',
-					createdAt: new Date().toISOString().split('T')[0],
-					lastLogin: 'Never',
-					avatar: null,
-					...userForm,
-				});
-			}
-			setUsers(updatedUsers);
-			showToast(
-				'success',
-				editingUser ? 'User Updated' : 'User Created',
-				`${userForm.name} has been ${editingUser ? 'updated' : 'added'} successfully.`
-			);
+	const saveUser = async () => {
+		if (!userForm.name || !userForm.email || !userForm.role) {
+			showToast('error', 'Error', 'Please fill in all required fields');
+			return;
+		}
+
+		if (!editingUser && !userForm.password) {
+			showToast('error', 'Error', 'Password is required for new users');
+			return;
+		}
+
+		const userData = {
+			name: userForm.name,
+			email: userForm.email,
+			role: userForm.role,
+			department: userForm.department,
+			managerId: userForm.manager,
+			isManagerApprover: userForm.isManagerApprover,
+			phone: userForm.phone,
+			location: userForm.location,
+			jobTitle: userForm.jobTitle,
+		};
+
+		// Only include password for new users
+		if (!editingUser) {
+			userData.password = userForm.password;
+		}
+
+		let success = false;
+		if (editingUser) {
+			success = await updateUser(editingUser.id, userData);
+		} else {
+			success = await createUser(userData);
+		}
+
+		if (success) {
 			setShowUserDialog(false);
 			resetForm();
 			setEditingUser(null);
-			setLoading(false);
-		}, 1000);
+		}
 	};
 
 	// Toggle user status with confirmation
@@ -326,21 +447,13 @@ const UserManagement = () => {
 			} ${user.name}?`,
 			header: 'Confirm Status Change',
 			icon: 'pi pi-exclamation-triangle',
-			accept: () => toggleUserStatus(user),
+			accept: () => handleToggleStatus(user),
 			acceptClassName: user.status === 'Active' ? 'p-button-danger' : 'p-button-success',
 		});
 	};
 
-	const toggleUserStatus = (user) => {
-		const updatedUsers = users.map((u) =>
-			u.id === user.id ? { ...u, status: u.status === 'Active' ? 'Inactive' : 'Active' } : u
-		);
-		setUsers(updatedUsers);
-		showToast(
-			'info',
-			'User Status Updated',
-			`${user.name} has been ${user.status === 'Active' ? 'deactivated' : 'activated'}.`
-		);
+	const handleToggleStatus = async (user) => {
+		await toggleUserStatus(user.id, user.status);
 	};
 
 	// Confirm delete user
@@ -349,15 +462,13 @@ const UserManagement = () => {
 			message: `Are you sure you want to permanently delete ${user.name}? This action cannot be undone.`,
 			header: 'Delete Confirmation',
 			icon: 'pi pi-trash',
-			accept: () => deleteUser(user),
+			accept: () => handleDeleteUser(user),
 			acceptClassName: 'p-button-danger',
 		});
 	};
 
-	const deleteUser = (user) => {
-		const updatedUsers = users.filter((u) => u.id !== user.id);
-		setUsers(updatedUsers);
-		showToast('success', 'User Deleted', `${user.name} has been removed from the system.`);
+	const handleDeleteUser = async (user) => {
+		await deleteUser(user.id);
 	};
 
 	// Reset password
@@ -366,17 +477,12 @@ const UserManagement = () => {
 			message: `Reset password for ${user.name}? A new temporary password will be sent to ${user.email}.`,
 			header: 'Reset Password',
 			icon: 'pi pi-key',
-			accept: () => resetPassword(user),
+			accept: () => handleResetPassword(user),
 		});
 	};
 
-	const resetPassword = (user) => {
-		showToast('success', 'Password Reset', `A reset link has been sent to ${user.email}.`);
-	};
-
-	// View expenses
-	const viewExpenses = (user) => {
-		showToast('info', 'View Expenses', `Loading expenses for ${user.name}...`);
+	const handleResetPassword = async (user) => {
+		await resetPassword(user.id);
 	};
 
 	// Bulk actions
@@ -385,19 +491,34 @@ const UserManagement = () => {
 			message: `Are you sure you want to deactivate ${selectedUsers.length} selected users?`,
 			header: 'Bulk Deactivation',
 			icon: 'pi pi-exclamation-triangle',
-			accept: () => bulkDelete(),
+			accept: () => handleBulkDelete(),
 			acceptClassName: 'p-button-danger',
 		});
 	};
 
-	const bulkDelete = () => {
-		const selectedIds = selectedUsers.map((u) => u.id);
-		const updatedUsers = users.map((u) =>
-			selectedIds.includes(u.id) ? { ...u, status: 'Inactive' } : u
-		);
-		setUsers(updatedUsers);
-		showToast('success', 'Bulk Action', `${selectedUsers.length} users deactivated.`);
-		setSelectedUsers([]);
+	const handleBulkDelete = async () => {
+		setActionLoading(true);
+		try {
+			const promises = selectedUsers.map((user) => toggleUserStatus(user.id, 'Active'));
+			await Promise.all(promises);
+			setSelectedUsers([]);
+		} finally {
+			setActionLoading(false);
+		}
+	};
+
+	// CSV Upload handler
+	const onCSVUpload = async (event) => {
+		const file = event.files[0];
+		if (!file) {
+			showToast('error', 'Error', 'Please select a file to upload');
+			return;
+		}
+
+		const success = await bulkImportUsers(file);
+		if (success) {
+			setShowBulkImport(false);
+		}
 	};
 
 	// Enhanced User Column Template
@@ -433,13 +554,15 @@ const UserManagement = () => {
 		const roleConfig = {
 			Manager: {
 				icon: 'pi-users',
-				color: 'bg-gradient-to-r from-blue-500 to-blue-600',
 				badge: 'bg-blue-100 text-blue-700',
 			},
 			Employee: {
 				icon: 'pi-user',
-				color: 'bg-gradient-to-r from-green-500 to-green-600',
 				badge: 'bg-green-100 text-green-700',
+			},
+			Admin: {
+				icon: 'pi-shield',
+				badge: 'bg-purple-100 text-purple-700',
 			},
 		};
 		const config = roleConfig[rowData.role] || roleConfig.Employee;
@@ -481,7 +604,7 @@ const UserManagement = () => {
 
 	// Manager Template
 	const managerTemplate = (rowData) => {
-		if (rowData.role === 'Manager' || rowData.manager === '-') {
+		if (rowData.role === 'Manager' || rowData.role === 'Admin' || !rowData.managerName) {
 			return (
 				<div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-gray-500 border-0">
 					<i className="pi pi-minus text-xs"></i>
@@ -493,16 +616,16 @@ const UserManagement = () => {
 			<div
 				className="flex items-center gap-2 group cursor-pointer"
 				onClick={() => {
-					const manager = users.find((u) => u.name === rowData.manager);
+					const manager = users.find((u) => u.id === rowData.managerId);
 					if (manager) openUserDetail(manager);
 				}}
 			>
 				<div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white text-xs font-bold shadow-md">
-					{rowData.manager.charAt(0)}
+					{rowData.managerName?.charAt(0) || 'M'}
 				</div>
 				<div>
 					<div className="text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors">
-						{rowData.manager}
+						{rowData.managerName}
 					</div>
 					<div className="text-xs text-gray-400">Manager</div>
 				</div>
@@ -524,17 +647,19 @@ const UserManagement = () => {
 			<div className="flex items-center justify-center">
 				<InputSwitch
 					checked={rowData.isManagerApprover}
-					onChange={(e) => {
-						const updatedUsers = users.map((u) =>
-							u.id === rowData.id ? { ...u, isManagerApprover: e.value } : u
-						);
-						setUsers(updatedUsers);
-						showToast(
-							'success',
-							'Approver Updated',
-							`Manager approver status updated for ${rowData.name}.`
-						);
+					onChange={async (e) => {
+						const success = await updateUser(rowData.id, {
+							isManagerApprover: e.value,
+						});
+						if (success) {
+							showToast(
+								'success',
+								'Approver Updated',
+								`Manager approver status updated for ${rowData.name}.`
+							);
+						}
 					}}
+					disabled={actionLoading}
 				/>
 			</div>
 		);
@@ -545,22 +670,24 @@ const UserManagement = () => {
 		const statusConfig = {
 			Active: {
 				icon: 'pi-check-circle',
-				gradient: 'from-green-400 to-green-600',
 				badge: 'bg-green-100 text-green-700 border-green-200',
 			},
 			Inactive: {
 				icon: 'pi-times-circle',
-				gradient: 'from-red-400 to-red-600',
 				badge: 'bg-red-100 text-red-700 border-red-200',
 			},
 		};
-		const config = statusConfig[rowData.status];
+		const config = statusConfig[rowData.status] || statusConfig.Inactive;
 
 		return (
 			<div
 				className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${config.badge} border-0 shadow-sm`}
 			>
-				<div className={`w-2 h-2 rounded-full bg-gradient-to-r ${config.gradient}`}></div>
+				<div
+					className={`w-2 h-2 rounded-full ${
+						rowData.status === 'Active' ? 'bg-green-500' : 'bg-red-500'
+					}`}
+				></div>
 				<span className="text-sm font-semibold">{rowData.status}</span>
 			</div>
 		);
@@ -568,7 +695,7 @@ const UserManagement = () => {
 
 	// Last Login Template
 	const lastLoginTemplate = (rowData) => {
-		if (rowData.lastLogin === 'Never') {
+		if (!rowData.lastLogin || rowData.lastLogin === 'Never') {
 			return (
 				<div className="flex items-center gap-2">
 					<i className="pi pi-clock text-gray-400 text-sm"></i>
@@ -597,7 +724,9 @@ const UserManagement = () => {
 			<div className="flex items-center gap-2">
 				<i className={`pi ${config.icon} ${config.color} text-sm`}></i>
 				<div>
-					<div className="text-sm text-gray-700">{rowData.lastLogin}</div>
+					<div className="text-sm text-gray-700">
+						{new Date(rowData.lastLogin).toLocaleDateString()}
+					</div>
 					<div className="text-xs text-gray-400">
 						{diffDays === 0
 							? 'Today'
@@ -621,6 +750,7 @@ const UserManagement = () => {
 					tooltip="View Details"
 					tooltipOptions={{ position: 'top' }}
 					onClick={() => openUserDetail(rowData)}
+					disabled={actionLoading}
 				/>
 				<Button
 					icon="pi pi-pencil"
@@ -629,6 +759,7 @@ const UserManagement = () => {
 					tooltip="Edit User"
 					tooltipOptions={{ position: 'top' }}
 					onClick={() => openUserDialog(rowData)}
+					disabled={actionLoading}
 				/>
 				<Button
 					icon="pi pi-key"
@@ -637,6 +768,7 @@ const UserManagement = () => {
 					tooltip="Reset Password"
 					tooltipOptions={{ position: 'top' }}
 					onClick={() => confirmResetPassword(rowData)}
+					disabled={actionLoading}
 				/>
 				<Button
 					icon={rowData.status === 'Active' ? 'pi pi-ban' : 'pi pi-check'}
@@ -645,6 +777,7 @@ const UserManagement = () => {
 					tooltip={rowData.status === 'Active' ? 'Deactivate' : 'Activate'}
 					tooltipOptions={{ position: 'top' }}
 					onClick={() => confirmToggleStatus(rowData)}
+					disabled={actionLoading}
 				/>
 				<Button
 					icon="pi pi-trash"
@@ -653,6 +786,7 @@ const UserManagement = () => {
 					tooltip="Delete User"
 					tooltipOptions={{ position: 'top' }}
 					onClick={() => confirmDeleteUser(rowData)}
+					disabled={actionLoading}
 				/>
 			</div>
 		);
@@ -667,18 +801,18 @@ const UserManagement = () => {
 				onClick={() => setShowUserDialog(false)}
 				className="p-button-text p-button-sm"
 				style={{ color: '#6b7280' }}
-				disabled={loading}
+				disabled={actionLoading}
 			/>
 			<Button
 				label={editingUser ? 'Update User' : 'Create User'}
-				icon={loading ? 'pi pi-spin pi-spinner' : 'pi pi-check'}
+				icon={actionLoading ? 'pi pi-spin pi-spinner' : 'pi pi-check'}
 				onClick={saveUser}
-				disabled={!userForm.name || !userForm.email || !userForm.role || loading}
+				disabled={!userForm.name || !userForm.email || !userForm.role || actionLoading}
 				className="p-button-sm shadow-lg transition-all duration-200 hover:shadow-xl"
 				style={{
 					background: theme.cardGradient,
 					border: 'none',
-					transform: loading ? 'scale(0.98)' : 'scale(1)',
+					transform: actionLoading ? 'scale(0.98)' : 'scale(1)',
 				}}
 			/>
 		</div>
@@ -689,23 +823,9 @@ const UserManagement = () => {
 		setUserForm({
 			...userForm,
 			role: e.value,
-			manager: e.value === 'Employee' ? userForm.manager : null,
+			manager: e.value === 'Employee' ? userForm.manager : '',
 			isManagerApprover: e.value === 'Manager' ? userForm.isManagerApprover : false,
 		});
-	};
-
-	// CSV Upload handler
-	const onCSVUpload = (event) => {
-		setLoading(true);
-		setTimeout(() => {
-			showToast(
-				'success',
-				'Bulk Import',
-				`${event.files.length} users imported successfully (simulated).`
-			);
-			setShowBulkImport(false);
-			setLoading(false);
-		}, 2000);
 	};
 
 	// Toolbar templates
@@ -762,6 +882,7 @@ const UserManagement = () => {
 						icon="pi pi-ban"
 						className="p-button-danger p-button-sm shadow-lg"
 						onClick={confirmBulkDelete}
+						disabled={actionLoading}
 					/>
 				)}
 				<Button
@@ -770,6 +891,7 @@ const UserManagement = () => {
 					onClick={() => setShowBulkImport(true)}
 					className="p-button-outlined p-button-sm shadow-lg"
 					style={{ color: theme.primary, borderColor: theme.primary }}
+					disabled={actionLoading}
 				/>
 				<Button
 					label="Add User"
@@ -777,6 +899,7 @@ const UserManagement = () => {
 					onClick={() => openUserDialog()}
 					className="p-button-sm shadow-lg transition-all duration-200 hover:shadow-xl"
 					style={{ background: theme.cardGradient, border: 'none' }}
+					disabled={actionLoading}
 				/>
 			</div>
 		);
@@ -790,28 +913,24 @@ const UserManagement = () => {
 				value: users.length,
 				icon: 'pi-users',
 				color: 'from-blue-500 to-blue-600',
-				trend: '+12%',
 			},
 			{
 				label: 'Active Users',
 				value: users.filter((u) => u.status === 'Active').length,
 				icon: 'pi-check-circle',
 				color: 'from-green-500 to-green-600',
-				trend: '+5%',
 			},
 			{
 				label: 'Managers',
 				value: users.filter((u) => u.role === 'Manager').length,
 				icon: 'pi-user-plus',
 				color: 'from-purple-500 to-purple-600',
-				trend: '+8%',
 			},
 			{
 				label: 'Departments',
-				value: new Set(users.map((u) => u.department)).size,
+				value: new Set(users.map((u) => u.department).filter(Boolean)).size,
 				icon: 'pi-building',
 				color: 'from-orange-500 to-orange-600',
-				trend: '+2',
 			},
 		];
 
@@ -826,10 +945,6 @@ const UserManagement = () => {
 							<div>
 								<p className="text-sm opacity-90 mb-1 font-medium">{stat.label}</p>
 								<h3 className="text-3xl font-bold mb-1">{stat.value}</h3>
-								<div className="flex items-center gap-1">
-									<i className="pi pi-arrow-up text-xs"></i>
-									<span className="text-xs opacity-80">{stat.trend}</span>
-								</div>
 							</div>
 							<div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center backdrop-blur-sm">
 								<i className={`pi ${stat.icon} text-xl`}></i>
@@ -843,7 +958,7 @@ const UserManagement = () => {
 
 	// Enhanced Filters Section
 	const TableHeader = () => (
-		<div className="bg-[$336699] p-6 rounded-md border border-gray-200 shadow-sm mb-6">
+		<div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm mb-6">
 			<div className="flex items-center justify-between mb-6">
 				<div className="flex items-center gap-3">
 					<div className="w-10 h-10 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl flex items-center justify-center">
@@ -1011,26 +1126,30 @@ const UserManagement = () => {
 									<label className="text-sm font-medium text-gray-500">
 										Phone
 									</label>
-									<p className="text-gray-800">{selectedUser.phone}</p>
+									<p className="text-gray-800">{selectedUser.phone || 'N/A'}</p>
 								</div>
 								<div>
 									<label className="text-sm font-medium text-gray-500">
 										Department
 									</label>
-									<p className="text-gray-800">{selectedUser.department}</p>
+									<p className="text-gray-800">
+										{selectedUser.department || 'N/A'}
+									</p>
 								</div>
 								<div>
 									<label className="text-sm font-medium text-gray-500">
 										Location
 									</label>
-									<p className="text-gray-800">{selectedUser.location}</p>
+									<p className="text-gray-800">
+										{selectedUser.location || 'N/A'}
+									</p>
 								</div>
 							</div>
 							<Divider />
 							<div>
 								<label className="text-sm font-medium text-gray-500">Manager</label>
 								<p className="text-gray-800">
-									{selectedUser.manager === '-' ? 'Self' : selectedUser.manager}
+									{selectedUser.managerName || 'Self'}
 								</p>
 							</div>
 						</div>
@@ -1045,7 +1164,9 @@ const UserManagement = () => {
 											Last Login
 										</p>
 										<p className="text-xs text-gray-500 m-0">
-											{selectedUser.lastLogin}
+											{selectedUser.lastLogin
+												? new Date(selectedUser.lastLogin).toLocaleString()
+												: 'Never'}
 										</p>
 									</div>
 								</div>
@@ -1058,7 +1179,11 @@ const UserManagement = () => {
 											Member Since
 										</p>
 										<p className="text-xs text-gray-500 m-0">
-											{selectedUser.createdAt}
+											{selectedUser.createdAt
+												? new Date(
+														selectedUser.createdAt
+												  ).toLocaleDateString()
+												: 'N/A'}
 										</p>
 									</div>
 								</div>
@@ -1069,6 +1194,30 @@ const UserManagement = () => {
 			</Dialog>
 		);
 	};
+
+	// Load users on component mount
+	useEffect(() => {
+		fetchUsers();
+	}, [fetchUsers]);
+
+	// Loading skeleton
+	if (loading) {
+		return (
+			<PageLayout>
+				<div className="p-6">
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+						{[1, 2, 3, 4].map((i) => (
+							<Skeleton key={i} height="120px" className="rounded-2xl" />
+						))}
+					</div>
+					<div className="bg-white rounded-2xl p-6">
+						<Skeleton height="40px" className="mb-4" />
+						<Skeleton height="300px" />
+					</div>
+				</div>
+			</PageLayout>
+		);
+	}
 
 	return (
 		<PageLayout>
@@ -1096,7 +1245,7 @@ const UserManagement = () => {
 				<TableHeader />
 
 				{/* Data Table */}
-				<div className="bg-white rounded-sm shadow-sm border border-gray-200 overflow-hidden">
+				<div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
 					<DataTable
 						value={filteredUsers}
 						selection={selectedUsers}
@@ -1107,6 +1256,7 @@ const UserManagement = () => {
 						paginator
 						rows={10}
 						rowsPerPageOptions={[5, 10, 25, 50]}
+						loading={tableLoading}
 						emptyMessage={
 							<div className="text-center py-16">
 								<div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -1221,17 +1371,19 @@ const UserManagement = () => {
 						</div>
 					}
 					visible={showUserDialog}
-					onHide={() => !loading && setShowUserDialog(false)}
+					onHide={() => !actionLoading && setShowUserDialog(false)}
 					footer={userDialogFooter}
 					style={{ width: '700px' }}
 					className="rounded-2xl"
-					closable={!loading}
+					closable={!actionLoading}
 				>
-					{loading && (
+					{actionLoading && (
 						<div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-10 rounded-2xl">
 							<div className="text-center">
 								<i className="pi pi-spin pi-spinner text-4xl text-blue-500 mb-2"></i>
-								<p className="text-gray-600">Saving user information...</p>
+								<p className="text-gray-600">
+									{editingUser ? 'Updating user...' : 'Creating user...'}
+								</p>
 							</div>
 						</div>
 					)}
@@ -1254,7 +1406,7 @@ const UserManagement = () => {
 								onChange={(e) => setUserForm({ ...userForm, name: e.target.value })}
 								placeholder="Enter full name"
 								className="w-full rounded-lg"
-								disabled={loading}
+								disabled={actionLoading}
 							/>
 						</div>
 
@@ -1270,7 +1422,7 @@ const UserManagement = () => {
 								}
 								placeholder="user@company.com"
 								className="w-full rounded-lg"
-								disabled={loading}
+								disabled={actionLoading}
 							/>
 						</div>
 
@@ -1287,7 +1439,7 @@ const UserManagement = () => {
 									}
 									placeholder="Enter password"
 									className="w-full rounded-lg"
-									disabled={loading}
+									disabled={actionLoading}
 								/>
 							</div>
 						)}
@@ -1303,7 +1455,7 @@ const UserManagement = () => {
 								}
 								placeholder="+1 (555) 123-4567"
 								className="w-full rounded-lg"
-								disabled={loading}
+								disabled={actionLoading}
 							/>
 						</div>
 
@@ -1327,7 +1479,7 @@ const UserManagement = () => {
 								onChange={onRoleChange}
 								placeholder="Select Role"
 								className="w-full rounded-lg"
-								disabled={loading}
+								disabled={actionLoading}
 							/>
 						</div>
 
@@ -1342,7 +1494,7 @@ const UserManagement = () => {
 								}
 								placeholder="e.g., Software Engineer"
 								className="w-full rounded-lg"
-								disabled={loading}
+								disabled={actionLoading}
 							/>
 						</div>
 
@@ -1358,7 +1510,7 @@ const UserManagement = () => {
 								onChange={(e) => setUserForm({ ...userForm, department: e.value })}
 								placeholder="Select Department"
 								className="w-full rounded-lg"
-								disabled={loading}
+								disabled={actionLoading}
 							/>
 						</div>
 
@@ -1373,7 +1525,7 @@ const UserManagement = () => {
 								}
 								placeholder="e.g., New York, NY"
 								className="w-full rounded-lg"
-								disabled={loading}
+								disabled={actionLoading}
 							/>
 						</div>
 
@@ -1389,7 +1541,7 @@ const UserManagement = () => {
 									onChange={(e) => setUserForm({ ...userForm, manager: e.value })}
 									placeholder="Select Manager"
 									className="w-full rounded-lg"
-									disabled={loading}
+									disabled={actionLoading}
 								/>
 							</div>
 						)}
@@ -1423,7 +1575,7 @@ const UserManagement = () => {
 											isManagerApprover: e.value,
 										})
 									}
-									disabled={loading}
+									disabled={actionLoading}
 								/>
 							</div>
 						</div>
@@ -1465,7 +1617,7 @@ const UserManagement = () => {
 						</div>
 					}
 					visible={showBulkImport}
-					onHide={() => !loading && setShowBulkImport(false)}
+					onHide={() => !actionLoading && setShowBulkImport(false)}
 					style={{ width: '600px' }}
 					className="rounded-2xl"
 					footer={
@@ -1475,13 +1627,13 @@ const UserManagement = () => {
 								icon="pi pi-times"
 								onClick={() => setShowBulkImport(false)}
 								className="p-button-text"
-								disabled={loading}
+								disabled={actionLoading}
 							/>
 						</div>
 					}
-					closable={!loading}
+					closable={!actionLoading}
 				>
-					{loading && (
+					{actionLoading && (
 						<div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-10 rounded-2xl">
 							<div className="text-center">
 								<i className="pi pi-spin pi-spinner text-4xl text-purple-500 mb-2"></i>
@@ -1497,7 +1649,7 @@ const UserManagement = () => {
 								CSV Template Format
 							</label>
 							<div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto border border-gray-700">
-								name,email,role,department,manager,isManagerApprover,jobTitle,phone,location
+								name,email,role,department,managerId,isManagerApprover,jobTitle,phone,location
 							</div>
 						</div>
 
@@ -1508,7 +1660,7 @@ const UserManagement = () => {
 							</label>
 							<FileUpload
 								chooseLabel="Select CSV File"
-								uploadLabel={loading ? 'Importing...' : 'Import Users'}
+								uploadLabel={actionLoading ? 'Importing...' : 'Import Users'}
 								cancelLabel="Cancel"
 								accept=".csv"
 								maxFileSize={1000000}
@@ -1516,7 +1668,7 @@ const UserManagement = () => {
 								auto
 								mode="advanced"
 								className="w-full"
-								disabled={loading}
+								disabled={actionLoading}
 							/>
 						</div>
 
@@ -1537,7 +1689,7 @@ const UserManagement = () => {
 											<strong>Required fields:</strong> name, email, role
 										</li>
 										<li>
-											<strong>Optional fields:</strong> department, manager,
+											<strong>Optional fields:</strong> department, managerId,
 											jobTitle, phone, location
 										</li>
 										<li>

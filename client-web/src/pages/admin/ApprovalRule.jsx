@@ -27,7 +27,7 @@ function ApprovalRule() {
 	useEffect(() => {
 		const fetchUsers = async () => {
 			try {
-				const res = await fetchGet({ pathName: 'admin/users' });
+				const res = await fetchGet({ pathName: 'admin/users-dropdown' });
 				if (res?.success) {
 					const options = res.data.map((u) => ({
 						label: u.name,
