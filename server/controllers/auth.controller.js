@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-
+const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const userModel = require('../models/user.model');
 const companyModel = require('../models/company.model');
@@ -9,7 +9,7 @@ const companyModel = require('../models/company.model');
 // const facultyModel = require('../models/faculty.model');
 const { sendResetPasswordEmail } = require('../utils/mailer');
 
-async function login(req, res){
+async function login(req, res) {
 	try {
 		const { username, password } = req.body;
 
@@ -80,13 +80,13 @@ async function login(req, res){
 			message: `Something went wrong: ${error.message}`,
 		});
 	}
-};
+}
 async function logout(req, res) {
 	await userModel.updateOne({ _id: req.body._id }, { currentToken: null });
 	res.clearCookie('auth');
 	return res.json({ success: true });
 }
-async function forgotPassword (req, res){
+async function forgotPassword(req, res) {
 	try {
 		const { email } = req.body;
 
@@ -111,7 +111,7 @@ async function forgotPassword (req, res){
 		}
 
 		// Find user by email
-		const user = await User.findOne({ email, isActive: true }).catch((err) => {
+		const user = await userModel.findOne({ email, isActive: true }).catch((err) => {
 			console.error('User find error:', err);
 			throw new Error('Error querying user');
 		});
@@ -135,7 +135,7 @@ async function forgotPassword (req, res){
 		});
 
 		// Update user password
-		await User.updateOne({ _id: user._id }, { password: hashedPassword }).catch((err) => {
+		await userModel.updateOne({ _id: user._id }, { password: hashedPassword }).catch((err) => {
 			console.error('User update error:', err);
 			throw new Error('Failed to update user password');
 		});
@@ -157,7 +157,7 @@ async function forgotPassword (req, res){
 			message: `Something went wrong: ${error.message}`,
 		});
 	}
-};
+}
 
 async function verify(req, res) {
 	const token = req.headers.authorization?.split(' ')[1];
@@ -223,7 +223,7 @@ async function changePassword(req, res) {
 
 	return res.status(200).json({ success: true, message: 'Password updated successfully' });
 }
-async function signup (req, res){
+async function signup(req, res) {
 	try {
 		const { name, email, password, confirmPassword, country, currency } = req.body;
 
@@ -337,7 +337,7 @@ async function signup (req, res){
 			message: `Something went wrong: ${error.message}`,
 		});
 	}
-};
+}
 
 module.exports = {
 	login,
