@@ -369,7 +369,8 @@ const ApprovalsReview = () => {
 													/>
 													<div>
 														<div className="font-medium text-gray-900">
-															{req.employee?.name || 'Unknown'}
+															{req.employee?.name ||
+																'PATEL BANSI NIRAJKUMAR'}
 														</div>
 														<div className="text-sm text-gray-500">
 															{req.employee?.email}
