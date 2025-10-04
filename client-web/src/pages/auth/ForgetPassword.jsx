@@ -37,7 +37,6 @@ const ForgotPassword = () => {
 		}
 		try {
 			const payload = { email };
-			console.log('Sending forgot-password payload:', payload); // Debug payload
 			const response = await fetchPost({
 				pathName: 'auth/forgot-password',
 				body: JSON.stringify(payload),
@@ -51,15 +50,13 @@ const ForgotPassword = () => {
 					life: 5000,
 				});
 			} else {
-				console.log('Forgot-password error response:', response); // Debug response
 				toast.current.show({
 					severity: 'error',
 					summary: 'Error',
-					detail: `${response?.message || 'Failed to send reset email.'}`,
+					detail: response?.message || 'Failed to send reset email.',
 				});
 			}
 		} catch (error) {
-			console.error('Forgot-password fetch error:', error);
 			toast.current.show({
 				severity: 'error',
 				summary: 'Error',
@@ -74,7 +71,6 @@ const ForgotPassword = () => {
 		setLoading(true);
 		try {
 			const payload = { email };
-			console.log('Resending forgot-password payload:', payload); // Debug payload
 			const response = await fetchPost({
 				pathName: 'auth/forgot-password',
 				body: JSON.stringify(payload),
@@ -88,15 +84,13 @@ const ForgotPassword = () => {
 					life: 5000,
 				});
 			} else {
-				console.log('Resend forgot-password error response:', response); // Debug response
 				toast.current.show({
 					severity: 'error',
 					summary: 'Error',
-					detail: `${response?.message || 'Failed to resend email.'}`,
+					detail: response?.message || 'Failed to resend email.',
 				});
 			}
 		} catch (error) {
-			console.error('Resend forgot-password fetch error:', error);
 			toast.current.show({
 				severity: 'error',
 				summary: 'Error',
@@ -110,9 +104,9 @@ const ForgotPassword = () => {
 	return (
 		<>
 			<Toast ref={toast} />
-			<div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-200 via-white to-gray-100 px-4">
-				<h1 className="text-4xl font-extrabold text-primary mb-16 tracking-wide drop-shadow-sm overflow-hidden whitespace-nowrap border-r-4 border-primary animate-typing">
-					Expense<span className="text-gray-800">Track</span>
+			<div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 px-4">
+				<h1 className="text-4xl font-extrabold text-blue-700 mb-16 tracking-wide drop-shadow-sm overflow-hidden whitespace-nowrap border-r-4 border-blue-600 animate-typing">
+					Expense<span className="text-blue-500">Track</span>
 				</h1>
 
 				<div className="relative w-full max-w-md p-8 rounded-xl shadow-lg backdrop-blur-md bg-white/30 border border-white/40">
@@ -121,16 +115,16 @@ const ForgotPassword = () => {
 							image={logo}
 							size="xlarge"
 							shape="circle"
-							className="size-24 shadow-lg border-4 border-white bg-primary/3 p-1.5"
+							className="w-24 h-24 shadow-lg border-4 border-white bg-gradient-to-r from-blue-500 to-blue-700 p-1.5"
 						/>
 					</div>
 
-					<h2 className="text-3xl font-bold text-primary text-center my-10">
+					<h2 className="text-3xl font-bold text-blue-800 text-center my-10">
 						Reset Password
 					</h2>
 
 					<div className="mb-4">
-						<label htmlFor="email" className="block text-primary font-medium mb-1">
+						<label htmlFor="email" className="block text-blue-800 font-medium mb-1">
 							Email
 						</label>
 						<InputText
@@ -138,7 +132,7 @@ const ForgotPassword = () => {
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
 							placeholder="Enter your email"
-							className="w-full p-3 rounded border border-gray-300 transition-all focus:ring-2 focus:ring-primary hover:border-primary"
+							className="w-full p-3 rounded border border-blue-300 transition-all focus:ring-2 focus:ring-blue-400 hover:border-blue-400"
 						/>
 					</div>
 
@@ -146,21 +140,21 @@ const ForgotPassword = () => {
 						label={<div className="text-white font-semibold">Send Email</div>}
 						onClick={handleSendEmail}
 						loading={loading}
-						className="w-full bg-primary hover:bg-[#2a547a] transition text-white font-semibold py-2.5 rounded shadow-sm transform hover:scale-105"
+						className="w-full bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-semibold py-2.5 rounded shadow-md transform hover:scale-105 transition-all"
 					/>
 
 					{showResend && (
 						<div className="mt-4 flex justify-end">
 							<Button
 								label={
-									<div className="text-primary font-medium flex items-center gap-2">
+									<div className="text-blue-500 font-medium flex items-center gap-2">
 										<i className="pi pi-refresh text-base" />
 										Resend Email
 									</div>
 								}
 								onClick={handleResendEmail}
 								loading={loading}
-								className="p-0 bg-transparent hover:bg-primary/10 transition rounded border-none focus:ring-2 focus:ring-primary transform hover:scale-105"
+								className="p-0 bg-transparent hover:bg-blue-100 transition rounded border-none focus:ring-2 focus:ring-blue-400 transform hover:scale-105"
 								disabled={!email || loading}
 								tooltip="Resend password reset email"
 								tooltipOptions={{ position: 'top' }}
@@ -173,12 +167,12 @@ const ForgotPassword = () => {
 						<Link to="/login">
 							<Button
 								label={
-									<div className="text-primary font-medium flex items-center gap-2">
+									<div className="text-blue-500 font-medium flex items-center gap-2">
 										<i className="pi pi-arrow-left text-base" />
 										Back to Login
 									</div>
 								}
-								className="text-primary hover:text-[#2a547a] bg-transparent border-none px-1 py-0 font-medium transform hover:scale-105 focus:ring-2 focus:ring-primary rounded"
+								className="text-blue-500 hover:text-blue-700 bg-transparent border-none px-1 py-0 font-medium transform hover:scale-105 focus:ring-2 focus:ring-blue-400 rounded"
 								text
 							/>
 						</Link>

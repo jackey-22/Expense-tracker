@@ -37,7 +37,7 @@ const routes = createBrowserRouter([
 	},
 	{
 		path: '/forgot-password',
-		loader: loginLoader,
+		// loader: loginLoader,
 		element: <ForgotPassword />,
 	},
 	{
