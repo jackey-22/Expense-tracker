@@ -15,7 +15,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { fetchPost, fetchGet } from '../../utils/fetch.utils';
 import PageLayout from '../../components/employeelayout/PageLayout';
-// Add to your existing imports
 import { Dropdown } from 'primereact/dropdown';
 import {
 	Upload,
@@ -35,6 +34,7 @@ import {
 	ArrowLeft,
 	Building,
 	CreditCard,
+	Save,
 } from 'lucide-react';
 
 const CreateExpense = () => {
@@ -51,6 +51,7 @@ const CreateExpense = () => {
 	const [ocrProcessing, setOcrProcessing] = useState(false);
 	const [ocrResult, setOcrResult] = useState(null);
 	const [loading, setLoading] = useState(false);
+	const [draftLoading, setDraftLoading] = useState(false);
 	const [errors, setErrors] = useState({});
 	const toast = useRef(null);
 	const navigate = useNavigate();
@@ -69,16 +70,16 @@ const CreateExpense = () => {
 		'Other',
 	];
 
-	// Add this state near other useState declarations
 	const [currencies, setCurrencies] = useState([]);
 	const [loadingCurrencies, setLoadingCurrencies] = useState(false);
+	const [users, setUsers] = useState([]);
+	const [loadingUsers, setLoadingUsers] = useState(false);
 
-	// Add this useEffect to fetch currencies
+	// Fetch currencies
 	useEffect(() => {
 		fetchCurrencies();
 	}, []);
 
-	// Add this function to fetch currencies from API
 	const fetchCurrencies = async () => {
 		setLoadingCurrencies(true);
 		try {
@@ -132,8 +133,11 @@ const CreateExpense = () => {
 		}
 		setLoadingCurrencies(false);
 	};
-	const [users, setUsers] = useState([]);
-	const [loadingUsers, setLoadingUsers] = useState(false);
+
+	// Fetch users
+	useEffect(() => {
+		fetchUsers();
+	}, []);
 
 	const fetchUsers = async () => {
 		setLoadingUsers(true);
@@ -156,10 +160,6 @@ const CreateExpense = () => {
 		setLoadingUsers(false);
 	};
 
-	useEffect(() => {
-		fetchUsers();
-	}, []);
-
 	const searchCategories = (event) => {
 		setTimeout(() => {
 			let filteredCategories;
@@ -174,40 +174,148 @@ const CreateExpense = () => {
 		}, 250);
 	};
 
-	const simulateOCRProcessing = (file) => {
+	// Real OCR Processing Function
+	const processOCR = async (file) => {
 		setOcrProcessing(true);
-		// Simulate OCR processing
-		setTimeout(() => {
-			const mockOcrData = {
-				totalAmount: Math.random() * 500 + 50,
-				date: new Date(),
-				merchant: 'Sample Merchant',
-				items: ['Item 1', 'Item 2'],
-			};
+		try {
+			// Create FormData for file upload
+			const formData = new FormData();
+			formData.append('file', file);
+			formData.append('language', 'eng');
+			formData.append('isOverlayRequired', 'false');
 
-			setOcrResult(mockOcrData);
+			// Using Tesseract.js for OCR - Client-side processing
+			const { createWorker } = await import('tesseract.js');
+			const worker = await createWorker('eng');
+
+			const { data } = await worker.recognize(file);
+			await worker.terminate();
+
+			// Parse the extracted text
+			const extractedText = data.text;
+			const parsedData = parseReceiptText(extractedText);
+
+			setOcrResult({
+				...parsedData,
+				rawText: extractedText,
+			});
+
+			// Auto-fill form with extracted data
 			setFormData((prev) => ({
 				...prev,
-				amount: mockOcrData.totalAmount,
-				date: mockOcrData.date,
-				description: `Expense from ${mockOcrData.merchant}`,
+				amount: parsedData.amount || prev.amount,
+				date: parsedData.date || prev.date,
+				description: parsedData.merchant
+					? `Expense from ${parsedData.merchant}`
+					: prev.description,
+				category: parsedData.category || prev.category,
 			}));
-			setOcrProcessing(false);
 
 			toast.current.show({
 				severity: 'success',
 				summary: 'Receipt Processed',
-				detail: 'Amount and details extracted from receipt',
+				detail: 'Text extracted from receipt successfully',
 				life: 4000,
 			});
-		}, 2000);
+		} catch (error) {
+			console.error('OCR Processing Error:', error);
+			toast.current.show({
+				severity: 'error',
+				summary: 'OCR Failed',
+				detail: 'Failed to process receipt. Please enter details manually.',
+				life: 5000,
+			});
+		}
+		setOcrProcessing(false);
+	};
+
+	// Parse extracted text to find relevant information
+	const parseReceiptText = (text) => {
+		const result = {
+			amount: null,
+			date: null,
+			merchant: null,
+			category: null,
+		};
+
+		// Extract amount (look for currency patterns)
+		const amountMatches = text.match(/(\d+[.,]\d{2})/g);
+		if (amountMatches) {
+			// Take the largest number as the total amount
+			const amounts = amountMatches.map((amt) => parseFloat(amt.replace(',', '.')));
+			result.amount = Math.max(...amounts);
+		}
+
+		// Extract date (various date formats)
+		const dateFormats = [
+			/\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}/, // DD/MM/YY or DD-MM-YYYY
+			/\d{4}[\/\-\.]\d{1,2}[\/\-\.]\d{1,2}/, // YYYY/MM/DD
+			/\d{1,2}\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{2,4}/i, // DD MMM YYYY
+		];
+
+		for (const format of dateFormats) {
+			const dateMatch = text.match(format);
+			if (dateMatch) {
+				try {
+					result.date = new Date(dateMatch[0]);
+					if (!isNaN(result.date.getTime())) break;
+				} catch (e) {
+					// Continue to next format
+				}
+			}
+		}
+
+		// Extract merchant (look for common store names or text at beginning)
+		const merchantKeywords = [
+			'walmart',
+			'target',
+			'amazon',
+			'starbucks',
+			'mcdonalds',
+			'uber',
+			'lyft',
+			'hotel',
+			'restaurant',
+			'cafe',
+			'store',
+			'market',
+			'gas',
+			'fuel',
+		];
+
+		const lines = text.split('\n').filter((line) => line.trim().length > 0);
+		if (lines.length > 0) {
+			// First non-empty line is often the merchant name
+			result.merchant = lines[0].substring(0, 50); // Limit length
+		}
+
+		// Try to determine category from text content
+		const categoryKeywords = {
+			'Travel': ['uber', 'lyft', 'taxi', 'flight', 'hotel', 'airbnb', 'train', 'bus'],
+			'Meals': ['restaurant', 'cafe', 'starbucks', 'mcdonalds', 'food', 'lunch', 'dinner'],
+			'Office Supplies': ['office', 'stationery', 'pen', 'paper', 'printer'],
+			'Equipment': ['computer', 'laptop', 'phone', 'tablet', 'camera'],
+			'Software': ['software', 'subscription', 'license', 'app'],
+			'Transportation': ['gas', 'fuel', 'parking', 'toll', 'car'],
+			'Accommodation': ['hotel', 'motel', 'lodging', 'airbnb'],
+		};
+
+		const lowerText = text.toLowerCase();
+		for (const [category, keywords] of Object.entries(categoryKeywords)) {
+			if (keywords.some((keyword) => lowerText.includes(keyword))) {
+				result.category = category;
+				break;
+			}
+		}
+
+		return result;
 	};
 
 	const handleFileUpload = (event) => {
 		const file = event.files[0];
 		if (file) {
 			setUploadedReceipt(file);
-			simulateOCRProcessing(file);
+			processOCR(file);
 		}
 	};
 
@@ -227,6 +335,91 @@ const CreateExpense = () => {
 		return Object.keys(newErrors).length === 0;
 	};
 
+	// Save as Draft function
+	// Save as Draft function
+	const saveAsDraft = async () => {
+		// For drafts, we don't validate all fields
+		const hasMinimumData = formData.description?.trim() && formData.amount > 0;
+
+		if (!hasMinimumData) {
+			toast.current.show({
+				severity: 'warn',
+				summary: 'Minimum Data Required',
+				detail: 'Please add at least description and amount to save as draft',
+				life: 4000,
+			});
+			return;
+		}
+
+		setDraftLoading(true);
+		try {
+			const draftData = {
+				...formData,
+				date: formData.date.toISOString(),
+				submitForApproval: false,
+			};
+
+			const result = await fetchPost({
+				pathName: 'employee/create-expense',
+				body: JSON.stringify(draftData),
+			});
+
+			if (result.success) {
+				toast.current.show({
+					severity: 'success',
+					summary: 'Draft Saved',
+					detail: 'Expense saved as draft successfully',
+					life: 4000,
+				});
+
+				// Clear the form and stay on the same page
+				setFormData({
+					amount: null,
+					currency: 'USD',
+					category: '',
+					description: '',
+					date: new Date(),
+					paidBy: '',
+				});
+
+				// Clear uploaded receipt and OCR results
+				setUploadedReceipt(null);
+				setOcrResult(null);
+			} else {
+				throw new Error(result.message || 'Failed to save draft');
+			}
+		} catch (error) {
+			toast.current.show({
+				severity: 'error',
+				summary: 'Draft Save Failed',
+				detail: error.message,
+				life: 5000,
+			});
+		}
+		setDraftLoading(false);
+	};
+	// Add this function near your other functions
+	const clearForm = () => {
+		setFormData({
+			amount: null,
+			currency: 'USD',
+			category: '',
+			description: '',
+			date: new Date(),
+			paidBy: '',
+		});
+		setUploadedReceipt(null);
+		setOcrResult(null);
+		setErrors({});
+
+		toast.current.show({
+			severity: 'info',
+			summary: 'Form Cleared',
+			detail: 'All form fields have been reset',
+			life: 3000,
+		});
+	};
+	// Submit expense for approval
 	const handleSubmit = async () => {
 		if (!validateForm()) {
 			toast.current.show({
@@ -258,7 +451,7 @@ const CreateExpense = () => {
 					detail: 'Expense submitted for approval successfully',
 					life: 4000,
 				});
-				// setTimeout(() => navigate('/dashboard'), 1500);
+				setTimeout(() => navigate('/dashboard'), 1500);
 			} else {
 				throw new Error(result.message || 'Failed to create expense');
 			}
@@ -302,7 +495,7 @@ const CreateExpense = () => {
 				</div>
 			</div>
 
-			<div className="grid grid-cols-1  w-full">
+			<div className="grid grid-cols-1 w-full">
 				{/* Main Form */}
 				<div className="xl:col-span-2">
 					<Card className="shadow-xl border-0 rounded-2xl bg-white/90 backdrop-blur-sm">
@@ -322,13 +515,8 @@ const CreateExpense = () => {
 								</p>
 
 								{!uploadedReceipt ? (
-									<div
-										className="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center bg-gray-50 hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 cursor-pointer"
-										onClick={() =>
-											document.querySelector('.p-fileupload-choose').click()
-										}
-									>
-										<Upload className="mx-auto text-gray-400 mb-3" size={48} />
+									<div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center bg-gray-50 hover:border-blue-400 hover:bg-blue-50 transition-all duration-300">
+										<Scan className="mx-auto text-gray-400 mb-3" size={48} />
 										<p className="text-gray-600 font-medium mb-2">
 											Drag & drop receipt here
 										</p>
@@ -345,7 +533,9 @@ const CreateExpense = () => {
 											maxFileSize={5000000}
 											customUpload
 											uploadHandler={handleFileUpload}
-											chooseOptions={{ style: { display: 'none' } }}
+											auto
+											chooseLabel="Browse Files"
+											style={{ display: 'block', marginTop: '1rem' }}
 										/>
 									</div>
 								) : (
@@ -378,7 +568,7 @@ const CreateExpense = () => {
 												size={20}
 											/>
 											<span className="text-blue-800 font-medium">
-												Processing receipt with OCR...
+												Extracting text from receipt...
 											</span>
 										</div>
 										<ProgressBar mode="indeterminate" className="mt-2 h-2" />
@@ -386,16 +576,54 @@ const CreateExpense = () => {
 								)}
 
 								{ocrResult && (
-									<Message
-										severity="success"
-										text="Receipt processed successfully! Amount and details auto-filled."
-										className="mt-4 border-green-200 bg-green-50"
-									/>
+									<div className="mt-4 p-4 bg-green-50 rounded-xl border border-green-200">
+										<div className="flex items-center gap-3 mb-3">
+											<CheckCircle className="text-green-600" size={20} />
+											<span className="text-green-800 font-medium">
+												Text Extracted Successfully
+											</span>
+										</div>
+										<div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+											{ocrResult.amount && (
+												<div className="flex justify-between">
+													<span className="text-gray-600">Amount:</span>
+													<span className="font-medium">
+														${ocrResult.amount}
+													</span>
+												</div>
+											)}
+											{ocrResult.date && (
+												<div className="flex justify-between">
+													<span className="text-gray-600">Date:</span>
+													<span className="font-medium">
+														{new Date(
+															ocrResult.date
+														).toLocaleDateString()}
+													</span>
+												</div>
+											)}
+											{ocrResult.merchant && (
+												<div className="flex justify-between md:col-span-2">
+													<span className="text-gray-600">Merchant:</span>
+													<span className="font-medium">
+														{ocrResult.merchant}
+													</span>
+												</div>
+											)}
+											{ocrResult.category && (
+												<div className="flex justify-between">
+													<span className="text-gray-600">Category:</span>
+													<span className="font-medium">
+														{ocrResult.category}
+													</span>
+												</div>
+											)}
+										</div>
+									</div>
 								)}
 							</div>
-
 							<Divider />
-
+							{/* Rest of your form remains the same */}
 							{/* Expense Details */}
 							<div className="mb-8">
 								<div className="flex items-center gap-3 mb-6">
@@ -552,9 +780,8 @@ const CreateExpense = () => {
 									</div>
 								</div>
 							</div>
-
 							<Divider />
-
+							{/* Submit Section */}
 							{/* Submit Section */}
 							<div className="flex flex-col sm:flex-row gap-3 justify-between items-center pt-4">
 								<div className="flex items-center gap-3 text-gray-600">
@@ -565,11 +792,31 @@ const CreateExpense = () => {
 								</div>
 								<div className="flex gap-3">
 									<Button
-										label="Cancel"
+										label="Clear Form"
 										icon={<X size={16} />}
 										className="p-button-outlined p-button-secondary border-gray-300 text-gray-700 px-6"
+										onClick={clearForm}
+										disabled={loading || draftLoading}
+									/>
+									<Button
+										label="Cancel"
+										icon={<ArrowLeft size={16} />}
+										className="p-button-outlined p-button-secondary border-gray-300 text-gray-700 px-6"
 										onClick={() => navigate('/')}
-										disabled={loading}
+										disabled={loading || draftLoading}
+									/>
+									<Button
+										label={draftLoading ? 'Saving Draft...' : 'Save Draft'}
+										icon={
+											draftLoading ? (
+												<Loader2 className="animate-spin" size={16} />
+											) : (
+												<Save size={16} />
+											)
+										}
+										onClick={saveAsDraft}
+										disabled={draftLoading || loading}
+										className="p-button-outlined p-button-help border-purple-300 text-purple-700 px-6 hover:bg-purple-50"
 									/>
 									<Button
 										label={loading ? 'Submitting...' : 'Submit Expense'}
@@ -581,11 +828,11 @@ const CreateExpense = () => {
 											)
 										}
 										onClick={handleSubmit}
-										disabled={loading}
+										disabled={loading || draftLoading}
 										className="bg-gradient-to-r from-blue-500 to-purple-600 border-0 px-6 hover:from-blue-600 hover:to-purple-700"
 									/>
 								</div>
-							</div>
+							</div>{' '}
 						</div>
 					</Card>
 				</div>

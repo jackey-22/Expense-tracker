@@ -4,7 +4,7 @@ const expenseController = require('../controllers/employee.controller');
 const { asyncRouteHandler } = require('../utils/route.utils');
 const { upload } = require('../utils/multer.utils');
 // const { authMiddleware } = require('../middleware/auth.middleware');
-
+// router.use(authMiddleware('Employee'));
 // POST routes
 router.post('/create-expense', asyncRouteHandler(expenseController.createExpense)); // Create expense (with optional auto-submit)
 // router.post('/:id/update', expenseController.updateExpense); // Update expense or submit for approval

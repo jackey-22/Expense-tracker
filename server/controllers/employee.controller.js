@@ -2,15 +2,21 @@
 const Expense = require('../models/expenses.model');
 const ApprovalRule = require('../models/ApprovalRule.model');
 const User = require('../models/user.model');
-
+// controllers/expenseController.js - Temporary fix
 async function createExpense(req, res) {
 	try {
-		if (!req.user) {
-			req.user = {
-				userId: '670ffdcf7c5a1e8b12345678', // <-- replace with an existing User _id from your DB
-				company: '670ffdcf7c5a1e8b87654321', // <-- replace with an existing Company _id
+		// Temporary: Use default user if no auth
+		let authUser = req.user || res.locals.user;
+
+		if (!authUser) {
+			// Use a default user for testing
+			authUser = {
+				userId: '670ffdcf7c5a1e8b12345678', // Use an existing user ID from your DB
+				company: '670ffdcf7c5a1e8b87654321', // Use an existing company ID from your DB
 			};
+			console.log('Using default user for testing:', authUser);
 		}
+
 		const {
 			amount,
 			currency,
@@ -21,23 +27,31 @@ async function createExpense(req, res) {
 			submitForApproval = true,
 		} = req.body;
 
+		// Validate required fields
+		if (!amount || !description) {
+			return res.status(400).json({
+				success: false,
+				message: 'Amount and description are required fields',
+			});
+		}
+
 		// Create expense
 		const expense = new Expense({
-			company: req.user.company,
-			employee: req.user.userId,
+			company: authUser.company,
+			employee: authUser.userId,
 			amount,
 			currency: currency || 'USD',
 			category,
 			description,
 			date: date || new Date(),
-			paidBy: paidBy || req.user.userId,
+			paidBy: paidBy || authUser.userId,
 			approvalStatus: submitForApproval ? 'InProgress' : 'Draft',
 		});
 
 		// If submitting for approval, determine approver
 		if (submitForApproval) {
 			const rules = await ApprovalRule.findOne({
-				company: req.user.company,
+				company: authUser.company,
 				isActive: true,
 			});
 
@@ -45,8 +59,8 @@ async function createExpense(req, res) {
 			if (rules && rules.approvalSteps.length > 0) {
 				const firstStep = rules.approvalSteps[0];
 				if (firstStep.approverRole === 'Manager') {
-					const employee = await User.findById(req.user.userId);
-					nextApprover = employee.manager;
+					const employee = await User.findById(authUser.userId);
+					nextApprover = employee?.manager || null;
 				} else if (firstStep.approverUser) {
 					nextApprover = firstStep.approverUser;
 				}
@@ -66,23 +80,42 @@ async function createExpense(req, res) {
 			success: true,
 			message: submitForApproval
 				? 'Expense created and submitted for approval'
-				: 'Expense created successfully',
+				: 'Expense saved as draft successfully',
 			expense: populatedExpense,
 		});
 	} catch (error) {
+		console.error('Error creating expense:', error);
 		res.status(500).json({
 			success: false,
 			message: error.message,
 		});
 	}
 }
-
 async function getExpenses(req, res) {
 	try {
 		const { status, startDate, endDate, category, page = 1, limit = 10 } = req.query;
-		let query = { employee: req.user.userId };
+		const authUser = req.user || res.locals.user;
 
-		if (status && status !== 'all') query.approvalStatus = status;
+		if (!authUser) {
+			return res.status(401).json({
+				success: false,
+				message: 'Unauthorized',
+			});
+		}
+
+		let query = { employee: authUser.userId };
+
+		// Handle status filter - include 'Draft' status
+		if (status && status !== 'all') {
+			if (status === 'draft') {
+				query.approvalStatus = 'Draft';
+			} else if (status === 'submitted') {
+				query.approvalStatus = 'InProgress';
+			} else {
+				query.approvalStatus = status;
+			}
+		}
+
 		if (category && category !== 'all') query.category = category;
 		if (startDate && endDate) {
 			query.date = {
