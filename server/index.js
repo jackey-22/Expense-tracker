@@ -15,6 +15,7 @@ const { errorHandler, asyncRouteHandler } = require('./utils/route.utils');
 const authRoutes = require('./routes/auth.route');
 const employeeRoutes = require('./routes/employee.route');
 const adminRoutes = require('./routes/admin.route');
+const managerRoutes = require('./routes/manager.route');
 const app = express();
 
 app.use(cors({ maxAge: 3600 }));
@@ -40,6 +41,7 @@ app.get('/', (req, res) => {
 app.use('/auth', authRoutes);
 app.use('/employee', employeeRoutes);
 app.use('/admin', adminRoutes);
+app.use('/manager', managerRoutes);
 app.use(errorHandler);
 
 dbConnect()
