@@ -17,6 +17,7 @@ import EmployeeDashboard from './pages/Employee/EmployeeDashboard';
 import CreateExpense from './pages/Employee/createExpense';
 import ExpenseHistory from './pages/Employee/expenseHistory';
 import EmployeeProfile from './pages/Employee/Profile';
+import AdminProfile from './pages/admin/AdminProfile';
 
 const routes = createBrowserRouter([
 	{
@@ -47,6 +48,7 @@ const routes = createBrowserRouter([
 			{ path: 'approval-rules', element: <ApprovalRule /> },
 			{ path: 'manage-expenses', element: <ManageExpenses /> },
 			{ path: 'manage-users', element: <UserManagement /> },
+			{ path: 'profile', element: <AdminProfile /> },
 		],
 	},
 	{

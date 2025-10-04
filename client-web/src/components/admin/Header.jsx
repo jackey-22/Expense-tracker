@@ -1,46 +1,63 @@
 import React from 'react';
-// import { useNavigate } from 'react-router-dom';
+import { Button } from 'primereact/button';
 import { Avatar } from 'primereact/avatar';
-// import logo from '/logo.png';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import { Users, Receipt } from 'lucide-react';
 
 export default function Header({ onToggleSidebar }) {
-	// const email = localStorage.getItem('email') || 'Guest';
-	// const navigate = useNavigate();
+	const navigate = useNavigate();
+	const { currentUser } = useAuth();
+
+	function handleProfileClick() {
+		// Navigate to admin profile page
+		navigate('/admin/profile');
+	}
 
 	return (
-		<header className="fixed top-0 left-0 right-0 z-40 w-full h-20 backdrop-blur-lg bg-white/60  border-b border-gray-200 flex justify-between items-center px-4 md:px-6 shadow-md">
-			{/* Left: Brand and Menu Toggle */}
-			<div className="flex items-center gap-4">
-				<button
+		<header className="flex items-center justify-between px-6 py-4 bg-white shadow-md z-50 w-full">
+			<div className="flex items-center gap-3 min-w-0">
+				<Button
+					icon="pi pi-bars"
+					className="p-button-text md:hidden my-auto"
 					onClick={onToggleSidebar}
-					className="md:hidden text-2xl text-gray-700  hover:text-blue-500 transition duration-200"
-					aria-label="Toggle sidebar"
-				>
-					☰
-				</button>
-				{/* Logo and Title */}
-				<div className="flex items-center gap-2">
-					{/* <img src={logo} alt="Logo" className="w-8 h-8 rounded-full object-contain" /> */}
-					<h1 className="text-2xl font-bold tracking-tight text-gray-800">
-						Expense Tracker
-					</h1>
+					aria-label="Toggle Menu"
+				/>
+				<div className="flex items-center gap-3">
+					<div className="bg-gradient-to-br from-blue-500 to-purple-600 p-2 rounded-xl text-white">
+						<Receipt size={28} />
+					</div>
+					<div>
+						<h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+							Expense Tracker
+						</h1>
+						<p className="text-sm text-gray-600">Manage your expenses efficiently</p>
+					</div>
 				</div>
 			</div>
 
-			{/* Right: User Info */}
-			{/* <div
-				className="flex items-center gap-3 bg-white/80 border border-gray-300  px-4 py-2 rounded-full cursor-pointer shadow-sm hover:shadow-md transition-all duration-200"
-				onClick={() => navigate('/profile')}
-			>
-				<Avatar
-					icon="pi pi-user"
-					shape="circle"
-					className="bg-blue-100 text-blue-700"
-				/>
-				<span className="hidden sm:inline text-sm font-medium text-gray-800">
-					{email}
-				</span>
-			</div> */}
+			<div className="flex items-center gap-4">
+				{/* Admin Profile */}
+				<div
+					className="flex items-center gap-3 cursor-pointer hover:bg-gray-100 rounded-lg p-2 transition-all duration-200"
+					onClick={handleProfileClick}
+				>
+					<div className="text-right hidden sm:block">
+						<div className="font-semibold text-gray-800 text-sm">
+							{currentUser?.name || 'Khushi Patel'}
+						</div>
+						<div className="text-xs text-gray-500">
+							{currentUser?.role || 'IT Department'}
+						</div>
+					</div>
+					<Avatar
+						shape="circle"
+						className="bg-gradient-to-br from-blue-500 to-purple-600 text-white w-10 h-10"
+						icon={<Users size={20} />}
+						image={currentUser?.avatar}
+					/>
+				</div>
+			</div>
 		</header>
 	);
 }
