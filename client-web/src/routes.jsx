@@ -5,16 +5,19 @@ import ErrorElement from './components/ErrorElement';
 import Login from './pages/auth/Login';
 import Signup from './pages/auth/SignUp';
 import ForgotPassword from './pages/auth/ForgetPassword';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import ApprovalRule from './pages/admin/ApprovalRule';
-import ManageExpenses from './pages/admin/ManageExpenses';
-import UserManagement from './pages/admin/UserManagement';
+// import AdminDashboard from './pages/admin/AdminDashboard';
+// import ApprovalRule from './pages/admin/ApprovalRule';
+// import ManageExpenses from './pages/admin/ManageExpenses';
+// import UserManagement from './pages/admin/UserManagement';
 import Dashboard from './pages/Manager/Dashboard';
 import ApprovalsReview from './pages/manager/ApprovalsReview';
 import History from './pages/Manager/History';
 import Profile from './pages/manager/Profile';
 // import ProducerDashboard from './pages/Producers/Dashboard';
 // import Registration from './pages/Producers/Registration';
+import EmployeeDashboard from './pages/Employee/Dashboard';
+import CreateExpense from './pages/Employee/createExpense';
+import ExpenseHistory from './pages/Employee/expenseHistory';
 
 const routes = createBrowserRouter([
 	{
@@ -37,14 +40,24 @@ const routes = createBrowserRouter([
 		loader: loginLoader,
 		element: <ForgotPassword />,
 	},
+	// {
+	// 	path: '/admin',
+	// 	errorElement: <ErrorElement />,
+	// 	children: [
+	// 		{ path: 'dashboard', element: <AdminDashboard /> },
+	// 		{ path: 'approval-rules', element: <ApprovalRule /> },
+	// 		{ path: 'manage-expenses', element: <ManageExpenses /> },
+	// 		{ path: 'manage-users', element: <UserManagement /> },
+	// 	],
+	// },
 	{
-		path: '/admin',
+		path: '/employee',
 		errorElement: <ErrorElement />,
 		children: [
-			{ path: 'dashboard', element: <AdminDashboard /> },
-			{ path: 'approve-rules', element: <ApprovalRule /> },
-			{ path: 'manage-expenses', element: <ManageExpenses /> },
-			{ path: 'manage-users', element: <UserManagement /> },
+			{ path: 'dashboard', element: <EmployeeDashboard /> },
+			{ path: 'create-expense', element: <CreateExpense /> },
+			{ path: 'expense-history', element: <ExpenseHistory /> },
+			// { path: 'milestone-form/:subsidyId', element: <MilestoneForm /> },
 		],
 	},
 	{
@@ -56,6 +69,7 @@ const routes = createBrowserRouter([
 			{ path: 'profile', element: <Profile /> },
 		],
 	},
+
 	// Catch all
 	{
 		path: '*',
