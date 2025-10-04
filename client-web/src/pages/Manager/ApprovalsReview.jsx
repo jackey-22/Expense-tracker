@@ -8,14 +8,14 @@ import PageLayout from '../../components/manager/PageLayout';
 import { fetchGet, fetchPost } from '../../utils/fetch.utils';
 
 const statusOptions = [
-	{ label: 'All', value: null },
+	{ label: 'All', value: 'all' },
 	{ label: 'Pending', value: 'InProgress' },
 	{ label: 'Approved', value: 'Approved' },
 	{ label: 'Rejected', value: 'Rejected' },
 ];
 
 const categoryOptions = [
-	{ label: 'All', value: null },
+	{ label: 'All', value: 'all' },
 	{ label: 'Travel', value: 'Travel' },
 	{ label: 'Meals', value: 'Meals' },
 	{ label: 'Office Supplies', value: 'Office Supplies' },
@@ -116,14 +116,14 @@ const ApprovalsReview = () => {
 		fetchAllExpenses(); // Changed from fetchPendingApprovals()
 	}, []);
 	// Filtering
+	// Filtering
 	let filteredRequests = requests;
-	if (statusFilter) {
+	if (statusFilter && statusFilter !== 'all') {
 		filteredRequests = filteredRequests.filter((r) => r.approvalStatus === statusFilter);
 	}
-	if (categoryFilter) {
+	if (categoryFilter && categoryFilter !== 'all') {
 		filteredRequests = filteredRequests.filter((r) => r.category === categoryFilter);
 	}
-
 	// Sorting
 	if (sortBy === 'amountAsc') {
 		filteredRequests = [...filteredRequests].sort((a, b) => a.amount - b.amount);
