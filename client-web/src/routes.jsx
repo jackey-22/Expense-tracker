@@ -5,6 +5,11 @@ import ErrorElement from './components/ErrorElement';
 import Login from './pages/auth/Login';
 import Signup from './pages/auth/SignUp';
 import ForgotPassword from './pages/auth/ForgetPassword';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import ApprovalRule from './pages/admin/ApprovalRule';
+import ManageExpenses from './pages/admin/ManageExpenses';
+import UserManagement from './pages/admin/UserManagement';
+// import ProducerDashboard from './pages/Producers/Dashboard';
 // import Registration from './pages/Producers/Registration';
 
 const routes = createBrowserRouter([
@@ -28,17 +33,16 @@ const routes = createBrowserRouter([
 		loader: loginLoader,
 		element: <ForgotPassword />,
 	},
-	// {
-	// 	path: '/producer',
-	// 	errorElement: <ErrorElement />,
-	// 	children: [
-	// 		{ path: 'registration', element: <Registration /> },
-	// 		{ path: 'dashboard', element: <ProducerDashboard /> },
-	// 		{ path: 'subsidies', element: <MySubsidies /> },
-	// 		{ path: 'milestone-form/:subsidyId', element: <MilestoneForm /> },
-	// 		{ path: 'fetch-milestones/:id', element: <Milestones /> },
-	// 	],
-	// },
+	{
+		path: '/admin',
+		errorElement: <ErrorElement />,
+		children: [
+			{ path: 'dashboard', element: <AdminDashboard /> },
+			{ path: 'approval-rules', element: <ApprovalRule /> },
+			{ path: 'manage-expenses', element: <ManageExpenses /> },
+			{ path: 'manage-users', element: <UserManagement /> },
+		],
+	},
 	// Catch all
 	{
 		path: '*',
