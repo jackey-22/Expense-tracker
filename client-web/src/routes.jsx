@@ -16,6 +16,7 @@ import Profile from './pages/manager/Profile';
 import EmployeeDashboard from './pages/Employee/EmployeeDashboard';
 import CreateExpense from './pages/Employee/createExpense';
 import ExpenseHistory from './pages/Employee/expenseHistory';
+import EmployeeProfile from './pages/Employee/Profile';
 
 const routes = createBrowserRouter([
 	{
@@ -55,7 +56,7 @@ const routes = createBrowserRouter([
 			{ path: 'dashboard', element: <EmployeeDashboard /> },
 			{ path: 'create-expense', element: <CreateExpense /> },
 			{ path: 'expense-history', element: <ExpenseHistory /> },
-			// { path: 'milestone-form/:subsidyId', element: <MilestoneForm /> },
+			{ path: 'profile', element: <EmployeeProfile /> },
 		],
 	},
 	{

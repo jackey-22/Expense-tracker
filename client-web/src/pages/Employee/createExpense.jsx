@@ -470,32 +470,7 @@ const CreateExpense = () => {
 		<PageLayout>
 			<Toast ref={toast} position="top-right" />
 
-			{/* Header */}
-			<div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 mb-6 shadow-xl border border-white/20">
-				<div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-					<div className="flex items-center gap-4">
-						<div className="bg-gradient-to-br from-blue-500 to-blue-600 p-3 rounded-xl text-white">
-							<Receipt size={32} />
-						</div>
-						<div>
-							<h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-								Create New Expense
-							</h1>
-							<p className="text-gray-600 text-lg mt-1">
-								Upload receipt or fill details manually
-							</p>
-						</div>
-					</div>
-					<Button
-						label="Back to Dashboard"
-						icon={<ArrowLeft size={16} />}
-						className="p-button-outlined p-button-secondary border-gray-300 text-gray-700 hover:bg-gray-50"
-						onClick={() => navigate('/')}
-					/>
-				</div>
-			</div>
-
-			<div className="grid grid-cols-1 w-full">
+			<div className="grid grid-cols-1 w-full pt-5">
 				{/* Main Form */}
 				<div className="xl:col-span-2">
 					<Card className="shadow-xl border-0 rounded-2xl bg-white/90 backdrop-blur-sm">
