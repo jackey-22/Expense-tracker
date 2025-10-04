@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
 		company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
 		manager: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 		// isManagerApprover: { type: Boolean, default: false }, // The expense is first approved by his manager the IS MANAGER APPROVER field is checked.
-        isActive: { type: Boolean, default: true }, // Soft delete flag
+		isActive: { type: Boolean, default: true }, // Soft delete flag
 	},
 	{ timestamps: true }
 );
