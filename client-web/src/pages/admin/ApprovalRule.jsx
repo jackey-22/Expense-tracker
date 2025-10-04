@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import PageLayout from '../../components/admin/PageLayout';
 import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
@@ -10,27 +10,38 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { Tooltip } from 'primereact/tooltip';
-import { fetchPost } from '../../utils/fetch.utils';
+import { fetchPost, fetchGet } from '../../utils/fetch.utils';
 
 function ApprovalRule() {
 	const [description, setDescription] = useState('Approval rule for miscellaneous expenses');
 	const [manager, setManager] = useState(null);
+	const [managerOptions, setManagerOptions] = useState([]);
 	const [isManagerApprover, setIsManagerApprover] = useState(false);
 	const [sequence, setSequence] = useState(false);
 	const [minApprovalPercent, setMinApprovalPercent] = useState(60);
-	const [approvers, setApprovers] = useState([
-		{ id: 1, user: { _id: '1', name: 'John' }, required: true },
-		{ id: 2, user: { _id: '2', name: 'Mitchell' }, required: false },
-		{ id: 3, user: { _id: '3', name: 'Andreas' }, required: false },
-	]);
+	const [approvers, setApprovers] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const toast = useRef(null);
 
-	const managerOptions = [
-		{ label: 'Sarah', value: { _id: '4', name: 'Sarah' } },
-		{ label: 'Tom', value: { _id: '5', name: 'Tom' } },
-		{ label: 'Emma', value: { _id: '6', name: 'Emma' } },
-	];
+	// Fetch users for dropdown
+	useEffect(() => {
+		const fetchUsers = async () => {
+			try {
+				const res = await fetchGet({ pathName: 'admin/users' });
+				if (res?.success) {
+					const options = res.data.map((u) => ({
+						label: u.name,
+						value: { _id: u._id, name: u.name },
+					}));
+					setManagerOptions(options);
+				}
+			} catch (error) {
+				console.error('Failed to fetch users', error);
+			}
+		};
+
+		fetchUsers();
+	}, []);
 
 	const addApprover = () => {
 		const newId = approvers.length ? Math.max(...approvers.map((a) => a.id)) + 1 : 1;
@@ -80,46 +91,113 @@ function ApprovalRule() {
 		/>
 	);
 
+	// const handleSave = async () => {
+	// 	if (!description || !manager || approvers.some((a) => !a.user)) {
+	// 		toast.current.show({
+	// 			severity: 'error',
+	// 			summary: 'Error',
+	// 			detail: 'Please fill all required fields (Description, Manager, Approvers).',
+	// 			life: 5000,
+	// 		});
+	// 		return;
+	// 	}
+
+	// 	setLoading(true);
+
+	// 	try {
+	// 		const payload = {
+	// 			description,
+	// 			manager: manager._id,
+	// 			isManagerApprover,
+	// 			approvers: approvers.map((a) => ({ user: a.user._id, required: a.required })),
+	// 			sequence,
+	// 			minApprovalPercent,
+	// 			company: 'company_id', // Replace with actual company ID
+	// 		};
+
+	// 		const payload = {
+	// 			ruleName,
+	// 			levels,
+	// 			conditions,
+	// 		};
+
+	// 		const result = await fetchPost({
+	// 			pathName: '/admin/approval-rule',
+	// 			body: JSON.stringify(payload),
+	// 		});
+
+	// 		if (response?.success) {
+	// 			toast.current.show({
+	// 				severity: 'success',
+	// 				summary: 'Success',
+	// 				detail: 'Approval rule saved successfully!',
+	// 				life: 5000,
+	// 			});
+	// 			// Reset form if needed
+	// 		} else {
+	// 			toast.current.show({
+	// 				severity: 'error',
+	// 				summary: 'Error',
+	// 				detail: response?.message || 'Failed to save approval rule.',
+	// 			});
+	// 		}
+	// 	} catch (error) {
+	// 		console.error('Save approval rule error:', error);
+	// 		toast.current.show({
+	// 			severity: 'error',
+	// 			summary: 'Error',
+	// 			detail: 'Something went wrong. Please try again.',
+	// 		});
+	// 	} finally {
+	// 		setLoading(false);
+	// 	}
+	// };
 	const handleSave = async () => {
-		if (!description || !manager || !minApprovalPercent || approvers.some((a) => !a.user)) {
+		if (!description || !manager || approvers.some((a) => !a.user)) {
 			toast.current.show({
 				severity: 'error',
 				summary: 'Error',
-				detail: 'Please fill all required fields (Description, Manager, Approvers, Min Approval %).',
+				detail: 'Please fill all required fields (Description, Manager, Approvers).',
 				life: 5000,
 			});
 			return;
 		}
 
 		setLoading(true);
+
 		try {
 			const payload = {
-				user: 'admin_id', // Replace with actual admin ID from auth context
 				description,
 				manager: manager._id,
 				isManagerApprover,
-				approvers: approvers.map((a) => ({ user: a.user._id, required: a.required })),
+				approvers: approvers.map((a) => ({
+					user: a.user._id,
+					required: a.required,
+				})),
 				sequence,
 				minApprovalPercent,
-				company: 'company_id', // Replace with actual company ID from auth context
+				company: '68e0a912ec22cf9878c4cec1', // TODO: replace with actual company ID
 			};
-			const response = await fetchPost({
-				pathName: 'approval-rule',
+
+			const result = await fetchPost({
+				pathName: 'admin/approval-rule',
 				body: JSON.stringify(payload),
 			});
 
-			if (response?.success) {
+			if (result?.success) {
 				toast.current.show({
 					severity: 'success',
 					summary: 'Success',
 					detail: 'Approval rule saved successfully!',
 					life: 5000,
 				});
+				// Optionally reset form
+				// setApprovers([]); setManager(null); setDescription('');
 			} else {
 				toast.current.show({
 					severity: 'error',
 					summary: 'Error',
-					detail: response?.message || 'Failed to save approval rule.',
+					detail: result?.message || 'Failed to save approval rule.',
 				});
 			}
 		} catch (error) {

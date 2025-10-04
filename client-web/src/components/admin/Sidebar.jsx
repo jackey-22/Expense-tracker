@@ -20,7 +20,9 @@ export default function Sidebar({ isVisible, onClose }) {
 		],
 		admin: [
 			{ name: 'Dashboard', route: '/admin/dashboard', icon: 'pi pi-home' },
-			{ name: 'Users', route: '/admin/users', icon: 'pi pi-users' },
+			{ name: 'Rules', route: '/admin/approve-rules', icon: 'pi pi-list-check' },
+			{ name: 'Expenses', route: '/admin/manage-expenses', icon: 'pi pi-users' },
+			{ name: 'Users', route: '/admin/manage-users', icon: 'pi pi-users' },
 		],
 	};
 

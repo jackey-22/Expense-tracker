@@ -6,7 +6,7 @@ const approvalRuleSchema = new mongoose.Schema(
 		approvalSteps: [
 			{
 				stepOrder: Number,
-				approverRole: { type: String, enum: ['Manager', 'Finance', 'Director'] },
+				// approverRole: { type: String, enum: ['Manager', 'Finance', 'Director'] },
 				approverUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 			},
 		],
@@ -17,7 +17,7 @@ const approvalRuleSchema = new mongoose.Schema(
 		},
 		isManagerApproverRequired: { type: Boolean, default: false }, // duplicate of user flag, but rule-based
 		percentage: Number, // e.g. 60
-		specificApprover: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+		specificApprover: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 		isActive: { type: Boolean, default: true }, // Soft delete flag
 	},
 	{ timestamps: true }
