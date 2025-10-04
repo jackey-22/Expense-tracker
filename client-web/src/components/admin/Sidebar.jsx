@@ -1,64 +1,86 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
 import { Button } from 'primereact/button';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import { LayoutDashboard, Users, FileText, CheckCircle, LogOut } from 'lucide-react';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 export default function Sidebar({ isVisible, onClose }) {
 	const navigate = useNavigate();
-	const role = localStorage.getItem('role')?.toLowerCase();
+	const { logout } = useAuth();
 
-	const roleRoutes = {
-		admin: [
-			{ name: 'Dashboard', route: '/admin/dashboard', icon: 'pi pi-home' },
-			{ name: 'Users', route: '/admin/manage-users', icon: 'pi pi-users' },
-			{ name: 'Rules', route: '/admin/approval-rules', icon: 'pi pi-list-check' },
-			{ name: 'Expenses', route: '/admin/manage-expenses', icon: 'pi pi-wallet' },
-			
-		],
-	};
+	const navigationItems = [
+		{
+			label: 'Dashboard',
+			icon: <LayoutDashboard size={20} />,
+			route: '/admin/dashboard',
+		},
+		{
+			label: 'Manage Users',
+			icon: <Users size={20} />,
+			route: '/admin/manage-users',
+		},
+		{
+			label: 'Approval Rules',
+			icon: <CheckCircle size={20} />,
+			route: '/admin/approval-rules',
+		},
+		{
+			label: 'Manage Expenses',
+			icon: <FileText size={20} />,
+			route: '/admin/manage-expenses',
+		},
+	];
 
-	const logout = () => {
-		localStorage.clear();
+	const handleLogout = async () => {
+		await logout();
 		navigate('/login');
 	};
 
-	const links = roleRoutes[role] || [];
+	const handleLogoutConfirm = () => {
+		confirmDialog({
+			message: 'Are you sure you want to logout?',
+			header: 'Logout Confirmation',
+			icon: 'pi pi-sign-out',
+			acceptClassName: 'p-button-danger',
+			rejectClassName: 'p-button-secondary p-button-text',
+			acceptLabel: 'Yes',
+			rejectLabel: 'No',
+			accept: () => handleLogout(),
+		});
+	};
 
 	return (
-		<aside
-			className={`bg-white border-r border-gray-200 shadow-lg 
-    w-60 flex-shrink-0 flex flex-col justify-between 
-    transition-transform duration-300 ease-in-out 
-    fixed top-16 left-0 z-30 h-[calc(100vh-4rem)]
-    ${isVisible ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
-		>
-			<nav className="px-6 py-8 space-y-4 overflow-y-auto flex-1">
-				{links.map((link) => (
+		<>
+			<ConfirmDialog />
+			<div className="h-full space-y-2">
+				{navigationItems.map(({ label, icon, route }) => (
 					<NavLink
-						key={link.name}
-						to={link.route}
-						onClick={onClose}
+						key={label}
+						to={route}
 						className={({ isActive }) =>
-							`flex items-center gap-4 px-5 py-3 rounded-xl font-semibold text-lg transition-all ${
+							`w-full text-base font-medium flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 ${
 								isActive
-									? 'bg-blue-600 text-white shadow'
-									: 'text-gray-700 hover:bg-blue-100'
+									? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+									: 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:text-gray-900'
 							}`
 						}
+						onClick={onClose}
 					>
-						<i className={`${link.icon} text-xl`}></i>
-						<span>{link.name}</span>
+						<span className="flex-shrink-0">{icon}</span>
+						<span>{label}</span>
 					</NavLink>
 				))}
-			</nav>
 
-			<div className="px-6 py-6 border-t border-gray-200">
-				<Button
-					icon="pi pi-sign-out"
-					label="Logout"
-					onClick={logout}
-					className="w-full p-button-text text-lg text-red-600 dark:text-red-400 hover:bg-red-100 transition-all"
-				/>
+				<div className="pt-4 mt-4 border-t border-gray-200">
+					<Button
+						label="Logout"
+						icon={<LogOut size={18} />}
+						className="w-full p-button-text text-left text-gray-700 hover:bg-red-50 hover:text-red-700 transition-all duration-300 gap-3 px-4 py-3 rounded-lg justify-start"
+						onClick={handleLogoutConfirm}
+					/>
+				</div>
 			</div>
-		</aside>
+		</>
 	);
 }
