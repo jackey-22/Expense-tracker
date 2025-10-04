@@ -3,6 +3,8 @@ import { loginLoader, verifyLoader } from './loaders/verify.loader';
 import ErrorElement from './components/ErrorElement';
 // import Home from './pages/Home';
 import Login from './pages/auth/Login';
+import Signup from './pages/auth/SignUp';
+import ForgotPassword from './pages/auth/ForgetPassword';
 // import Registration from './pages/Producers/Registration';
 
 const routes = createBrowserRouter([
@@ -16,11 +18,16 @@ const routes = createBrowserRouter([
 		// loader: loginLoader,
 		element: <Login />,
 	},
-	// {
-	// 	path: '/forgot-password',
-	// 	loader: loginLoader,
-	// 	element: <ForgotPassword />,
-	// },
+	{
+		path: '/Signup',
+		// loader: loginLoader,
+		element: <Signup />,
+	},
+	{
+		path: '/forgot-password',
+		loader: loginLoader,
+		element: <ForgotPassword />,
+	},
 	// {
 	// 	path: '/producer',
 	// 	errorElement: <ErrorElement />,

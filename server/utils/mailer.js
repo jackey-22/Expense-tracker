@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 
 async function sendResetPasswordEmail(email, name, username, newPassword) {
 	const mailOptions = {
-		from: `"Team SkillScript" <${process.env.MAIL_USER}>`,
+		from: `"Team Expense-Tracker" <${process.env.MAIL_USER}>`,
 		to: email,
 		subject: 'Password Reset - New Login Credentials',
 		html: `
@@ -25,7 +25,7 @@ async function sendResetPasswordEmail(email, name, username, newPassword) {
       </ul>
       <p>It is recommended to change your password after logging in.</p>
       <br>
-      <p>Regards,<br>SkillScript</p>
+      <p>Regards,<br>Expense-Tracker</p>
     `,
 	};
 
