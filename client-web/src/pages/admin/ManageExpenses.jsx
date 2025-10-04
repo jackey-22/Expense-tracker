@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
@@ -15,137 +14,82 @@ import { Image } from 'primereact/image';
 import { Divider } from 'primereact/divider';
 import { Message } from 'primereact/message';
 import { TabView, TabPanel } from 'primereact/tabview';
-import { Chart } from 'primereact/chart';
 import PageLayout from '../../components/admin/PageLayout';
 
 const ManageExpenses = () => {
-	// Enhanced expense data
+	// Sample data - replace with actual data source
 	const [expenses, setExpenses] = useState([
 		{
 			id: 1,
 			employee: 'John Doe',
-			employeeEmail: 'john@example.com',
+			employeeEmail: 'john.doe@company.com',
 			category: 'Travel',
-			amount: 120.5,
-			currency: 'USD',
-			description: 'Taxi from airport to hotel - Business trip to NYC',
-			date: new Date('2025-09-28'),
-			status: 'Pending',
-			manager: 'Alice Smith',
-			receipt: 'https://via.placeholder.com/600x400/336699/ffffff?text=Receipt+%231',
-			submittedDate: new Date('2025-09-29'),
-			department: 'IT',
+			amount: 250.0,
+			currency: '$',
+			description: 'Flight to New York for client meeting',
+			date: new Date('2023-10-01'),
 			priority: 'High',
-			notes: 'Urgent client meeting',
+			status: 'Pending',
+			department: 'Sales',
+			receipt: 'https://via.placeholder.com/400x300?text=Receipt+1',
+			notes: 'Business class required due to long flight',
+			submittedDate: new Date('2023-10-02'),
 		},
 		{
 			id: 2,
-			employee: 'Bob Johnson',
-			employeeEmail: 'bob@example.com',
+			employee: 'Jane Smith',
+			employeeEmail: 'jane.smith@company.com',
 			category: 'Food',
-			amount: 50.0,
-			currency: 'USD',
-			description: 'Business lunch with client - Q3 partnership discussion',
-			date: new Date('2025-09-27'),
-			status: 'Approved',
-			manager: 'Alice Smith',
-			receipt: 'https://via.placeholder.com/600x400/10b981/ffffff?text=Receipt+%232',
-			submittedDate: new Date('2025-09-27'),
-			approvedDate: new Date('2025-09-28'),
-			approvedBy: 'Alice Smith',
-			department: 'Sales',
+			amount: 45.5,
+			currency: '$',
+			description: 'Lunch meeting with potential client',
+			date: new Date('2023-10-03'),
 			priority: 'Medium',
+			status: 'Approved',
+			department: 'Marketing',
+			receipt: 'https://via.placeholder.com/400x300?text=Receipt+2',
+			notes: '',
+			submittedDate: new Date('2023-10-04'),
+			approvedDate: new Date('2023-10-05'),
+			approvedBy: 'Admin User',
 		},
 		{
 			id: 3,
-			employee: 'Jane Smith',
-			employeeEmail: 'jane@example.com',
+			employee: 'Mike Johnson',
+			employeeEmail: 'mike.johnson@company.com',
 			category: 'Supplies',
-			amount: 200.0,
-			currency: 'USD',
-			description: 'Office stationery and printer supplies for Q4',
-			date: new Date('2025-09-26'),
-			status: 'Rejected',
-			manager: 'Alice Smith',
-			receipt: 'https://via.placeholder.com/600x400/ef4444/ffffff?text=Receipt+%233',
-			submittedDate: new Date('2025-09-26'),
-			rejectedDate: new Date('2025-09-27'),
-			rejectionReason: 'Duplicate expense submission - Please consolidate',
-			rejectedBy: 'Alice Smith',
-			department: 'HR',
+			amount: 120.75,
+			currency: '$',
+			description: 'Office supplies for new team member',
+			date: new Date('2023-10-05'),
 			priority: 'Low',
+			status: 'Rejected',
+			department: 'HR',
+			receipt: 'https://via.placeholder.com/400x300?text=Receipt+3',
+			notes: 'Budget exceeded for quarter',
+			submittedDate: new Date('2023-10-06'),
+			rejectedDate: new Date('2023-10-07'),
+			rejectedBy: 'Admin User',
+			rejectionReason: 'Exceeds quarterly budget limit for supplies.',
 		},
 		{
 			id: 4,
-			employee: 'Mike Chen',
-			employeeEmail: 'mike@example.com',
-			category: 'Travel',
-			amount: 450.0,
-			currency: 'USD',
-			description: 'Flight tickets for client meeting in New York',
-			date: new Date('2025-10-01'),
-			status: 'Pending',
-			manager: 'Alice Smith',
-			receipt: 'https://via.placeholder.com/600x400/336699/ffffff?text=Receipt+%234',
-			submittedDate: new Date('2025-10-02'),
-			department: 'IT',
-			priority: 'High',
-			notes: 'Conference attendance',
-		},
-		{
-			id: 5,
-			employee: 'Sarah Williams',
-			employeeEmail: 'sarah@example.com',
+			employee: 'Sarah Wilson',
+			employeeEmail: 'sarah.wilson@company.com',
 			category: 'Entertainment',
-			amount: 85.75,
-			currency: 'USD',
-			description: 'Team dinner after project completion celebration',
-			date: new Date('2025-09-30'),
-			status: 'Approved',
-			manager: 'Alice Smith',
-			receipt: 'https://via.placeholder.com/600x400/10b981/ffffff?text=Receipt+%235',
-			submittedDate: new Date('2025-10-01'),
-			approvedDate: new Date('2025-10-02'),
-			approvedBy: 'Alice Smith',
-			department: 'Marketing',
+			amount: 89.99,
+			currency: '$',
+			description: 'Team building event tickets',
+			date: new Date('2023-10-08'),
 			priority: 'Medium',
-		},
-		{
-			id: 6,
-			employee: 'Tom Brown',
-			employeeEmail: 'tom@example.com',
-			category: 'Travel',
-			amount: 320.0,
-			currency: 'USD',
-			description: 'Hotel accommodation for 2 nights - Boston conference',
-			date: new Date('2025-10-03'),
 			status: 'Pending',
-			manager: 'Alice Smith',
-			receipt: 'https://via.placeholder.com/600x400/336699/ffffff?text=Receipt+%236',
-			submittedDate: new Date('2025-10-04'),
-			department: 'Sales',
-			priority: 'High',
+			department: 'Engineering',
+			receipt: 'https://via.placeholder.com/400x300?text=Receipt+4',
+			notes: '',
+			submittedDate: new Date('2023-10-09'),
 		},
 	]);
 
-	// Filter options
-	const employees = [
-		'John Doe',
-		'Bob Johnson',
-		'Jane Smith',
-		'Mike Chen',
-		'Sarah Williams',
-		'Tom Brown',
-	];
-	const categories = ['Travel', 'Food', 'Supplies', 'Entertainment', 'Other'];
-	const statuses = ['Pending', 'Approved', 'Rejected'];
-	const departments = ['IT', 'Sales', 'HR', 'Marketing', 'Finance'];
-
-	// Filter states
-	const [selectedEmployee, setSelectedEmployee] = useState(null);
-	const [selectedCategory, setSelectedCategory] = useState(null);
-	const [selectedStatus, setSelectedStatus] = useState(null);
-	const [selectedDepartment, setSelectedDepartment] = useState(null);
 	const [selectedDate, setSelectedDate] = useState(null);
 	const [globalFilter, setGlobalFilter] = useState('');
 	const [selectedExpenses, setSelectedExpenses] = useState([]);
@@ -171,10 +115,6 @@ const ManageExpenses = () => {
 
 		return (
 			matchesGlobal &&
-			(!selectedEmployee || exp.employee === selectedEmployee) &&
-			(!selectedCategory || exp.category === selectedCategory) &&
-			(!selectedStatus || exp.status === selectedStatus) &&
-			(!selectedDepartment || exp.department === selectedDepartment) &&
 			(!selectedDate || exp.date.toDateString() === selectedDate.toDateString())
 		);
 	});
@@ -194,31 +134,6 @@ const ManageExpenses = () => {
 			.reduce((sum, e) => sum + e.amount, 0),
 	};
 
-	// Chart data
-	const chartData = {
-		labels: ['Pending', 'Approved', 'Rejected'],
-		datasets: [
-			{
-				data: [stats.pending, stats.approved, stats.rejected],
-				backgroundColor: ['#f59e0b', '#10b981', '#ef4444'],
-				hoverBackgroundColor: ['#fbbf24', '#34d399', '#f87171'],
-			},
-		],
-	};
-
-	const chartOptions = {
-		plugins: {
-			legend: {
-				labels: {
-					usePointStyle: true,
-					font: {
-						size: 12,
-					},
-				},
-			},
-		},
-	};
-
 	// Toast notifications
 	const showToast = (severity, summary, detail) => {
 		toastRef.current?.show({ severity, summary, detail, life: 3000 });
@@ -226,10 +141,6 @@ const ManageExpenses = () => {
 
 	// Clear all filters
 	const clearFilters = () => {
-		setSelectedEmployee(null);
-		setSelectedCategory(null);
-		setSelectedStatus(null);
-		setSelectedDepartment(null);
 		setSelectedDate(null);
 		setGlobalFilter('');
 	};
@@ -639,10 +550,10 @@ const ManageExpenses = () => {
 				<div className="w-8 h-8 bg-[#336699] rounded-lg flex items-center justify-center">
 					<i className="pi pi-filter text-white"></i>
 				</div>
-				<h4 className="text-[#336699] font-bold text-lg m-0">Advanced Filters</h4>
+				<h4 className="text-[#336699] font-bold text-lg m-0">Filters</h4>
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 				{/* Global Search */}
 				<div className="flex flex-col">
 					<label className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
@@ -650,7 +561,7 @@ const ManageExpenses = () => {
 						Search
 					</label>
 					<span className="p-input-icon-left w-full">
-						<i className="pi pi-search" />
+						
 						<InputText
 							value={globalFilter}
 							onChange={(e) => setGlobalFilter(e.target.value)}
@@ -658,70 +569,6 @@ const ManageExpenses = () => {
 							className="w-full shadow-sm"
 						/>
 					</span>
-				</div>
-
-				{/* Employee Filter */}
-				<div className="flex flex-col">
-					<label className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
-						<i className="pi pi-user mr-1"></i>
-						Employee
-					</label>
-					<Dropdown
-						value={selectedEmployee}
-						options={employees}
-						placeholder="All Employees"
-						onChange={(e) => setSelectedEmployee(e.value)}
-						showClear
-						className="w-full shadow-sm"
-					/>
-				</div>
-
-				{/* Category Filter */}
-				<div className="flex flex-col">
-					<label className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
-						<i className="pi pi-tag mr-1"></i>
-						Category
-					</label>
-					<Dropdown
-						value={selectedCategory}
-						options={categories}
-						placeholder="All Categories"
-						onChange={(e) => setSelectedCategory(e.value)}
-						showClear
-						className="w-full shadow-sm"
-					/>
-				</div>
-
-				{/* Status Filter */}
-				<div className="flex flex-col">
-					<label className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
-						<i className="pi pi-circle mr-1"></i>
-						Status
-					</label>
-					<Dropdown
-						value={selectedStatus}
-						options={statuses}
-						placeholder="All Status"
-						onChange={(e) => setSelectedStatus(e.value)}
-						showClear
-						className="w-full shadow-sm"
-					/>
-				</div>
-
-				{/* Department Filter */}
-				<div className="flex flex-col">
-					<label className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
-						<i className="pi pi-building mr-1"></i>
-						Department
-					</label>
-					<Dropdown
-						value={selectedDepartment}
-						options={departments}
-						placeholder="All Departments"
-						onChange={(e) => setSelectedDepartment(e.value)}
-						showClear
-						className="w-full shadow-sm"
-					/>
 				</div>
 
 				{/* Date Filter */}
@@ -838,19 +685,6 @@ const ManageExpenses = () => {
 							</div>
 						</div>
 					</div>
-
-					{/* Chart Section
-						<div className="mb-6 bg-gradient-to-r from-indigo-50 to-purple-50 p-5 rounded-xl border border-indigo-100 shadow-sm">
-							<div className="flex items-center justify-between mb-4">
-								<h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-									<i className="pi pi-chart-pie text-[#336699]"></i>
-									Expense Status Distribution
-								</h3>
-							</div>
-							<div className="max-w-sm mx-auto">
-								<Chart type="doughnut" data={chartData} options={chartOptions} />
-							</div>
-						</div> */}
 
 					{/* Filters */}
 					{tableHeader}
