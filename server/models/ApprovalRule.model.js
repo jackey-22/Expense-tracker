@@ -10,13 +10,12 @@ const approvalRuleSchema = new mongoose.Schema(
 				approverUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 			},
 		],
-		// rules: {
-		// type: {
-		//   type: String,
-		//   enum: ["Percentage", "SpecificApprover", "Hybrid"],
-		//   default: "Percentage",
-		// },
-		//},
+		ruleType: {
+			type: String,
+			enum: ['Percentage', 'SpecificApprover', 'Hybrid'],
+			default: 'Percentage',
+		},
+		isManagerApproverRequired: { type: Boolean, default: false }, // duplicate of user flag, but rule-based
 		percentage: Number, // e.g. 60
 		specificApprover: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 		isActive: { type: Boolean, default: true }, // Soft delete flag

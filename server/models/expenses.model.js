@@ -22,6 +22,16 @@ const expenseSchema = new mongoose.Schema(
 		},
 		currentApprover: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 		remarks: { type: String },
+		approvalRule: { type: mongoose.Schema.Types.ObjectId, ref: 'ApprovalRule' }, // which rule was applied
+		// approvalFlow: { type: mongoose.Schema.Types.ObjectId, ref: 'ApprovalFlow' }, // runtime log
+		history: [
+			{
+				approver: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+				action: { type: String, enum: ['Approved', 'Rejected'] },
+				remarks: String,
+				decidedAt: Date,
+			},
+		],
 	},
 	{ timestamps: true }
 );
