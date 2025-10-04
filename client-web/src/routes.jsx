@@ -9,6 +9,10 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import ApprovalRule from './pages/admin/ApprovalRule';
 import ManageExpenses from './pages/admin/ManageExpenses';
 import UserManagement from './pages/admin/UserManagement';
+import Dashboard from './pages/Manager/Dashboard';
+import ApprovalsReview from './pages/manager/ApprovalsReview';
+import History from './pages/Manager/History';
+import Profile from './pages/manager/Profile';
 // import ProducerDashboard from './pages/Producers/Dashboard';
 // import Registration from './pages/Producers/Registration';
 
@@ -41,6 +45,15 @@ const routes = createBrowserRouter([
 			{ path: 'approve-rules', element: <ApprovalRule /> },
 			{ path: 'manage-expenses', element: <ManageExpenses /> },
 			{ path: 'manage-users', element: <UserManagement /> },
+		],
+	},
+	{
+		path: '/manager',
+		children: [
+			{ path: 'dashboard', element: <Dashboard /> },
+			{ path: 'approvals-review', element: <ApprovalsReview /> },
+			{ path: 'history', element: <History /> },
+			{ path: 'profile', element: <Profile /> },
 		],
 	},
 	// Catch all

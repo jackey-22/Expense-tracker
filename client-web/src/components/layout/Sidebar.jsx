@@ -1,74 +1,84 @@
+// components/Sidebar.jsx
 import React from 'react';
 import { Button } from 'primereact/button';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import {
-	CalendarCheck2,
 	LayoutDashboard,
-	Table2,
-	Group,
-	MonitorDot,
-	Tag,
-	MessageSquareHeart,
-	SquarePen,
-	ReceiptText,
-	Verified,
+	FileText,
+	History,
+	Receipt,
+	Settings,
+	LogOut,
+	Users,
+	CheckCircle,
+	BarChart3,
+	Building,
+	UserCheck,
+	DollarSign,
+	UserCog,
 } from 'lucide-react';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { FaChalkboardTeacher, FaFileAlt } from 'react-icons/fa';
 
 export default function Sidebar({ isVisible, onClose }) {
 	const navigate = useNavigate();
-	const { logout, role } = useAuth();
-	// const role = 'faculty';
+	const { logout, currentUser } = useAuth();
 
-	const data = localStorage.getItem('data');
-	const instituteId = data ? JSON.parse(data)?.instituteId : null;
-
-	const roleBasedButtons = {
-		// government: [
-		// 	{
-		// 		label: 'Dashboard',
-		// 		icon: <LayoutDashboard size={23} />,
-		// 		route: '/government/dashboard',
-		// 	},
-		// 	{
-		// 		label: 'Create Contract',
-		// 		icon: <SquarePen size={23} />,
-		// 		route: '/government/create-smart-contract',
-		// 	},
-		// 	{
-		// 		label: 'Active Contracts',
-		// 		icon: <ReceiptText size={23} />,
-		// 		route: '/government/active-contracts',
-		// 	},
-		// ],
-		// producer: [
-		// 	{
-		// 		label: 'Dashboard',
-		// 		icon: <LayoutDashboard size={23} />,
-		// 		route: '/producer/dashboard',
-		// 	},
-		// 	{
-		// 		label: 'My Subsidies',
-		// 		icon: <FaFileAlt size={23} />,
-		// 		route: '/producer/subsidies',
-		// 	},
-		// ],
-		// auditor: [
-		// 	{
-		// 		label: 'Dashboard',
-		// 		icon: <LayoutDashboard size={23} />,
-		// 		route: '/auditor/dashboard',
-		// 	},
-		// 	{
-		// 		label: 'Verify Milestones',
-		// 		icon: <Verified size={23} />,
-		// 		route: '/auditor/verify-milestones',
-		// 	},
-		// ],
+	// Navigation items based on role
+	const roleBasedNav = {
+		employee: [
+			{
+				label: 'Dashboard',
+				icon: <LayoutDashboard size={20} />,
+				route: '/employee/dashboard',
+			},
+			{
+				label: 'Create Expense',
+				icon: <Receipt size={20} />,
+				route: '/employee/create-expense',
+			},
+			{ label: 'My Expenses', icon: <FileText size={20} />, route: '/employee/expenses' },
+			{ label: 'Expense History', icon: <History size={20} />, route: '/employee/history' },
+		],
+		manager: [
+			{
+				label: 'Dashboard',
+				icon: <LayoutDashboard size={20} />,
+				route: '/manager/dashboard',
+			},
+			{
+				label: 'Expense Review',
+				icon: <CheckCircle size={20} />,
+				route: '/manager/approvals-review',
+			},
+			{ label: 'Team Expenses', icon: <Users size={20} />, route: '/manager/team-expenses' },
+			{ label: 'Approval History', icon: <History size={20} />, route: '/manager/history' },
+			{ label: 'Reports', icon: <BarChart3 size={20} />, route: '/manager/reports' },
+		],
+		admin: [
+			{ label: 'Dashboard', icon: <LayoutDashboard size={20} />, route: '/admin/dashboard' },
+			{ label: 'User Management', icon: <Users size={20} />, route: '/admin/users' },
+			{ label: 'All Expenses', icon: <DollarSign size={20} />, route: '/admin/all-expenses' },
+			{
+				label: 'Approval Workflow',
+				icon: <UserCheck size={20} />,
+				route: '/admin/approval-workflow',
+			},
+			{
+				label: 'Company Settings',
+				icon: <Building size={20} />,
+				route: '/admin/company-settings',
+			},
+			{ label: 'Analytics', icon: <BarChart3 size={20} />, route: '/admin/analytics' },
+			{ label: 'System Logs', icon: <FileText size={20} />, route: '/admin/system-logs' },
+		],
 	};
 
+	// Default role = employee if not found
+	const userRole = currentUser?.role?.toLowerCase() || 'employee';
+	const navigationItems = roleBasedNav[userRole] || roleBasedNav.employee;
+
+	// Logout logic
 	const handleLogout = async () => {
 		await logout();
 		navigate('/login');
@@ -79,66 +89,44 @@ export default function Sidebar({ isVisible, onClose }) {
 			message: 'Are you sure you want to logout?',
 			header: 'Logout Confirmation',
 			icon: 'pi pi-sign-out',
-			className: 'md:w-96 sm:w-90',
-			acceptClassName: 'p-button-danger ml-3',
+			acceptClassName: 'p-button-danger',
 			rejectClassName: 'p-button-secondary p-button-text',
 			acceptLabel: 'Yes',
 			rejectLabel: 'No',
-			draggable: false,
 			accept: () => handleLogout(),
-			reject: () => {},
 		});
 	};
-	const buttons = roleBasedButtons[role] || [];
 
 	return (
 		<>
 			<ConfirmDialog />
-			<div className="h-full space-y-3.5 mt-4">
-				{buttons.map(({ label, icon, route }) =>
-					route === '#' ? (
-						<Button
-							key={label}
-							label={label}
-							icon={icon}
-							className="w-full text-xl font-semibold flex items-center gap-2 px-3 py-2 rounded p-button-text text-left text-disabled cursor-not-allowed opacity-60"
-							disabled
-						/>
-					) : (
-						<NavLink
-							key={label}
-							to={route}
-							className={({ isActive }) =>
-								`w-full text-xl font-semibold my-auto flex items-center gap-2 px-3 py-2 rounded transition-all duration-300 ${
-									isActive
-										? 'bg-card text-primary shadow-md'
-										: 'text-white hover:bg-card hover:text-primary hover:shadow-md'
-								}`
-							}
-							onClick={onClose}
-						>
-							<div className="flex gap-2.5 my-auto">
-								<span className="text-xl my-auto">
-									{typeof icon === 'string' ? (
-										<i className={icon} style={{ fontSize: '1.5rem' }}></i>
-									) : (
-										icon
-									)}
-								</span>
-								<span className="text-xl mb-0.5">{label}</span>
-							</div>
-						</NavLink>
-					)
-				)}
+			<div className="h-full space-y-2">
+				{navigationItems.map(({ label, icon, route }) => (
+					<NavLink
+						key={label}
+						to={route}
+						className={({ isActive }) =>
+							`w-full text-base font-medium flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 ${
+								isActive
+									? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+									: 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:text-gray-900'
+							}`
+						}
+						onClick={onClose}
+					>
+						<span className="flex-shrink-0">{icon}</span>
+						<span>{label}</span>
+					</NavLink>
+				))}
 
-				<Button
-					label={<div className="text-xl font-semibold mb-1">Logout</div>}
-					icon={
-						<i className="pi pi-sign-out mr-1 my-auto" style={{ fontSize: '1.5rem' }} />
-					}
-					className="w-full my-auto p-button-text text-left text-white hover:bg-card hover:text-primary hover:shadow-md transition-all duration-300 [&_.pi]:text-xl gap-1"
-					onClick={handleLogoutConfirm}
-				/>
+				<div className="pt-4 mt-4 border-t border-gray-200">
+					<Button
+						label="Logout"
+						icon={<LogOut size={18} />}
+						className="w-full p-button-text text-left text-gray-700 hover:bg-red-50 hover:text-red-700 transition-all duration-300 gap-3 px-4 py-3 rounded-lg justify-start"
+						onClick={handleLogoutConfirm}
+					/>
+				</div>
 			</div>
 		</>
 	);
