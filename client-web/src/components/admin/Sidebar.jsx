@@ -33,8 +33,8 @@ export default function Sidebar({ isVisible, onClose }) {
 
 	return (
 		<aside
-			className={`bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 shadow-lg 
-    w-64 flex-shrink-0 flex flex-col justify-between 
+			className={`bg-white border-r border-gray-200 shadow-lg 
+    w-60 flex-shrink-0 flex flex-col justify-between 
     transition-transform duration-300 ease-in-out 
     fixed top-16 left-0 z-30 h-[calc(100vh-4rem)]
     ${isVisible ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
@@ -49,7 +49,7 @@ export default function Sidebar({ isVisible, onClose }) {
 							`flex items-center gap-4 px-5 py-3 rounded-xl font-semibold text-lg transition-all ${
 								isActive
 									? 'bg-blue-600 text-white shadow'
-									: 'text-gray-700 dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-gray-800'
+									: 'text-gray-700 hover:bg-blue-100'
 							}`
 						}
 					>
@@ -59,12 +59,12 @@ export default function Sidebar({ isVisible, onClose }) {
 				))}
 			</nav>
 
-			<div className="px-6 py-6 border-t border-gray-200 dark:border-gray-800">
+			<div className="px-6 py-6 border-t border-gray-200">
 				<Button
 					icon="pi pi-sign-out"
 					label="Logout"
 					onClick={logout}
-					className="w-full p-button-text text-lg text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 transition-all"
+					className="w-full p-button-text text-lg text-red-600 dark:text-red-400 hover:bg-red-100 transition-all"
 				/>
 			</div>
 		</aside>
