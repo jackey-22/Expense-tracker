@@ -54,6 +54,36 @@ Companies struggle with:
 
 ### Solution
 
+// ...existing code...
+
+## 📸 Screenshots
+
+<div align="center">
+
+![Sign in](img/image1.png) *Sign in Page*
+
+![Reset Password](img/image2.png) *Login Page*
+
+![Employee Dashboard](img/image3.png) *Employee Dashboard*
+
+![Create Expenses](img/image4.png) *Create Expense Form*
+
+![Manager Dashboard](img/image5.png) *Expense Management*
+
+![Expense Approval](img/image6.png) *Manager Dashboard*
+
+![User Management Admin side](img/image7.png) *Admin Panel*
+
+![Aproval Rule](img/image8.png) *Aproval rules*
+
+![Manage Expenses](img/image9.png) *Manage Expenses*
+
+</div>
+
+---
+
+// ...existing code...
+
 Our system provides:
 
 -   ✅ **Automated approval workflows** with configurable rules
@@ -457,41 +487,6 @@ GET    /currency/exchange-rate?from=USD&to=EUR
 POST   /currency/convert
 ```
 
-### Example Request
-
-```javascript
-// Create Expense
-POST /employee/create-expense
-Content-Type: application/json
-
-{
-  "amount": 150.50,
-  "currency": "USD",
-  "category": "Travel",
-  "description": "Client meeting taxi fare",
-  "date": "2025-10-04",
-  "submitForApproval": true
-}
-
-// Response
-{
-  "success": true,
-  "message": "Expense created and submitted for approval",
-  "expense": {
-    "_id": "67...",
-    "employee": {...},
-    "amount": 150.50,
-    "currency": "USD",
-    "convertedAmount": 135.45,
-    "category": "Travel",
-    "approvalStatus": "InProgress",
-    "currentApprover": {...}
-  }
-}
-```
-
----
-
 ## 🔄 Approval Flow
 
 ### Flow Diagram
@@ -589,142 +584,6 @@ For detailed approval flow documentation, see
 
 ---
 
-## 🗄️ Database Schema
-
-### Collections
-
-#### Users
-
-```javascript
-{
-  _id: ObjectId,
-  name: String,
-  email: String (unique),
-  password: String (hashed),
-  role: "Admin" | "Manager" | "Employee",
-  company: ObjectId (ref: Company),
-  manager: ObjectId (ref: User),
-  isManagerApprover: Boolean,
-  department: String,
-  phone: String,
-  location: String,
-  jobTitle: String,
-  isActive: Boolean,
-  createdAt: Date,
-  updatedAt: Date
-}
-```
-
-#### Companies
-
-```javascript
-{
-  _id: ObjectId,
-  country: String,
-  defaultCurrency: String,
-  admin: ObjectId (ref: User),
-  isActive: Boolean,
-  createdAt: Date,
-  updatedAt: Date
-}
-```
-
-#### Expenses
-
-```javascript
-{
-  _id: ObjectId,
-  company: ObjectId (ref: Company),
-  employee: ObjectId (ref: User),
-  amount: Number,
-  currency: String,
-  convertedAmount: Number,
-  category: String,
-  description: String,
-  date: Date,
-  paidBy: ObjectId (ref: User),
-  receipt: String,
-  approvalStatus: "Draft" | "InProgress" | "Approved" | "Rejected",
-  currentApprover: ObjectId (ref: User),
-  remarks: String,
-  approvalRule: ObjectId (ref: ApprovalRule),
-  approvalFlow: ObjectId (ref: ApprovalFlow),
-  history: [{
-    approver: ObjectId,
-    action: String,
-    remarks: String,
-    decidedAt: Date
-  }],
-  createdAt: Date,
-  updatedAt: Date
-}
-```
-
-#### ApprovalRules
-
-```javascript
-{
-  _id: ObjectId,
-  company: ObjectId (ref: Company),
-  name: String,
-  approvalSteps: [{
-    stepOrder: Number,
-    approverUser: ObjectId (ref: User)
-  }],
-  ruleType: "Percentage" | "SpecificApprover" | "Hybrid",
-  isManagerApproverRequired: Boolean,
-  percentage: Number,
-  specificApprover: [ObjectId],
-  isActive: Boolean,
-  createdAt: Date,
-  updatedAt: Date
-}
-```
-
-#### ApprovalFlows
-
-```javascript
-{
-  _id: ObjectId,
-  expense: ObjectId (ref: Expense),
-  company: ObjectId (ref: Company),
-  steps: [{
-    stepOrder: Number,
-    approver: ObjectId (ref: User),
-    role: String,
-    required: Boolean,
-    decision: "Pending" | "Approved" | "Rejected",
-    decidedAt: Date,
-    remarks: String
-  }],
-  overallStatus: "InProgress" | "Approved" | "Rejected",
-  createdAt: Date,
-  updatedAt: Date
-}
-```
-
----
-
-## 📸 Screenshots
-
-### Employee Dashboard
-
-![Employee Dashboard](docs/screenshots/employee-dashboard.png)
-
-### Manager Approvals
-
-![Manager Approvals](docs/screenshots/manager-approvals.png)
-
-### Admin Panel
-
-![Admin Panel](docs/screenshots/admin-panel.png)
-
-### Approval Rules Configuration
-
-![Approval Rules](docs/screenshots/approval-rules.png)
-
----
-
 ## 🗺️ Roadmap
 
 ### Phase 1: Core Features ✅
@@ -801,10 +660,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Team
 
--   **Project Lead**: [Your Name]
--   **Backend Developer**: [Your Name]
--   **Frontend Developer**: [Your Name]
--   **UI/UX Designer**: [Your Name]
+-   **Team Leader**: Chandani Jaykishan
+-   **Team Member**: Patel Khushi
+-   **Team Member**: Gohil Jay
+-   **Team Member**: Hihoriya Nitigna
 
 ---
 
