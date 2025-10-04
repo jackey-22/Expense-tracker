@@ -20,15 +20,15 @@ npm run preview
 
 ## 🛠️ Tech Stack
 
-- **React 19.1.1** - UI Framework
-- **Vite** - Build tool
-- **React Router v7** - Routing
-- **PrimeReact** - UI Components
-- **TailwindCSS** - Styling
-- **Formik + Yup** - Form validation
-- **Chart.js & Recharts** - Data visualization
-- **Tesseract.js** - OCR for receipt scanning
-- **Lucide React** - Icons
+-   **React 19.1.1** - UI Framework
+-   **Vite** - Build tool
+-   **React Router v7** - Routing
+-   **PrimeReact** - UI Components
+-   **TailwindCSS** - Styling
+-   **Formik + Yup** - Form validation
+-   **Chart.js & Recharts** - Data visualization
+-   **Tesseract.js** - OCR for receipt scanning
+-   **Lucide React** - Icons
 
 ## 📁 Project Structure
 
@@ -61,23 +61,26 @@ client-web/
 ## 🎨 Features
 
 ### Employee Features
-- Submit expenses with receipt upload
-- View expense history and status
-- Track approval progress
-- OCR receipt scanning
+
+-   Submit expenses with receipt upload
+-   View expense history and status
+-   Track approval progress
+-   OCR receipt scanning
 
 ### Manager Features
-- Review pending approvals
-- Approve/reject expenses with comments
-- View team expenses
-- Dashboard with statistics
+
+-   Review pending approvals
+-   Approve/reject expenses with comments
+-   View team expenses
+-   Dashboard with statistics
 
 ### Admin Features
-- User management (CRUD)
-- Approval rule configuration
-- Expense oversight
-- Analytics and reports
-- Bulk operations
+
+-   User management (CRUD)
+-   Approval rule configuration
+-   Expense oversight
+-   Analytics and reports
+-   Bulk operations
 
 ## ⚙️ Configuration
 
@@ -91,23 +94,23 @@ VITE_APP_NAME=Expense Tracker
 
 ## 🔧 Available Scripts
 
-- `npm run dev` - Start development server (port 5173)
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
+-   `npm run dev` - Start development server (port 5173)
+-   `npm run build` - Build for production
+-   `npm run preview` - Preview production build
+-   `npm run lint` - Run ESLint
 
 ## 📦 Key Dependencies
 
 ```json
 {
-  "react": "^19.1.1",
-  "react-router-dom": "^7.8.2",
-  "primereact": "^10.9.7",
-  "chart.js": "^4.5.0",
-  "formik": "^2.4.6",
-  "yup": "^1.7.0",
-  "tesseract.js": "^6.0.1",
-  "axios": "^1.11.0"
+	"react": "^19.1.1",
+	"react-router-dom": "^7.8.2",
+	"primereact": "^10.9.7",
+	"chart.js": "^4.5.0",
+	"formik": "^2.4.6",
+	"yup": "^1.7.0",
+	"tesseract.js": "^6.0.1",
+	"axios": "^1.11.0"
 }
 ```
 
@@ -125,10 +128,11 @@ const expenses = await apiRequest('/employee/expenses');
 ## 📱 Responsive Design
 
 Built with mobile-first approach using TailwindCSS. Fully responsive across:
-- 📱 Mobile (320px+)
-- 📱 Tablet (768px+)
-- 💻 Desktop (1024px+)
-- 🖥️ Large screens (1920px+)
+
+-   📱 Mobile (320px+)
+-   📱 Tablet (768px+)
+-   💻 Desktop (1024px+)
+-   🖥️ Large screens (1920px+)
 
 ## 🎯 Role-Based Routing
 
@@ -137,8 +141,8 @@ Routes are protected based on user roles:
 ```javascript
 // Protected routes example
 <Route path="/admin/*" element={<AdminLayout />}>
-  <Route path="dashboard" element={<AdminDashboard />} />
-  <Route path="users" element={<UserManagement />} />
+	<Route path="dashboard" element={<AdminDashboard />} />
+	<Route path="users" element={<UserManagement />} />
 </Route>
 ```
 
@@ -154,9 +158,15 @@ This template provides a minimal setup to get React working in Vite with HMR and
 
 Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-   [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react)
+    uses [Babel](https://babeljs.io/) for Fast Refresh
+-   [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc)
+    uses [SWC](https://swc.rs/) for Fast Refresh
 
 ## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+If you are developing a production application, we recommend using TypeScript with type-aware lint
+rules enabled. Check out the
+[TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for
+information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io)
+in your project.

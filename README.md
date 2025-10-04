@@ -7,9 +7,11 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-5.0%2B-green.svg)
 ![React](https://img.shields.io/badge/React-19.1.1-blue.svg)
 
-**A comprehensive enterprise-level expense management system with intelligent approval workflows, multi-currency support, and role-based access control.**
+**A comprehensive enterprise-level expense management system with intelligent approval workflows,
+multi-currency support, and role-based access control.**
 
-[Features](#-features) • [Tech Stack](#-tech-stack) • [Installation](#-installation) • [Usage](#-usage) • [API Documentation](#-api-documentation) • [Contributing](#-contributing)
+[Features](#-features) • [Tech Stack](#-tech-stack) • [Installation](#-installation) •
+[Usage](#-usage) • [API Documentation](#-api-documentation) • [Contributing](#-contributing)
 
 </div>
 
@@ -17,78 +19,87 @@
 
 ## 📋 Table of Contents
 
-- [Overview](#-overview)
-- [Key Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [System Architecture](#-system-architecture)
-- [Installation](#-installation)
-- [Configuration](#-configuration)
-- [Usage](#-usage)
-- [API Documentation](#-api-documentation)
-- [Approval Flow](#-approval-flow)
-- [Database Schema](#-database-schema)
-- [Screenshots](#-screenshots)
-- [Roadmap](#-roadmap)
-- [Contributing](#-contributing)
-- [License](#-license)
+-   [Overview](#-overview)
+-   [Key Features](#-features)
+-   [Tech Stack](#-tech-stack)
+-   [System Architecture](#-system-architecture)
+-   [Installation](#-installation)
+-   [Configuration](#-configuration)
+-   [Usage](#-usage)
+-   [API Documentation](#-api-documentation)
+-   [Approval Flow](#-approval-flow)
+-   [Database Schema](#-database-schema)
+-   [Screenshots](#-screenshots)
+-   [Roadmap](#-roadmap)
+-   [Contributing](#-contributing)
+-   [License](#-license)
 
 ---
 
 ## 🌟 Overview
 
-**Expense Tracker** is a modern, full-stack expense management solution designed to streamline the reimbursement process for organizations of any size. It eliminates manual processes, reduces errors, and provides complete transparency in expense approvals.
+**Expense Tracker** is a modern, full-stack expense management solution designed to streamline the
+reimbursement process for organizations of any size. It eliminates manual processes, reduces errors,
+and provides complete transparency in expense approvals.
 
 ### Problem Statement
 
 Companies struggle with:
-- ⏱️ **Time-consuming manual processes** for expense reimbursement
-- ❌ **Error-prone tracking** and lack of audit trails
-- 🔍 **No transparency** in approval status
-- 📊 **Complex multi-level approvals** without proper workflow management
-- 💱 **Multi-currency handling** across global teams
+
+-   ⏱️ **Time-consuming manual processes** for expense reimbursement
+-   ❌ **Error-prone tracking** and lack of audit trails
+-   🔍 **No transparency** in approval status
+-   📊 **Complex multi-level approvals** without proper workflow management
+-   💱 **Multi-currency handling** across global teams
 
 ### Solution
 
 Our system provides:
-- ✅ **Automated approval workflows** with configurable rules
-- 🔄 **Multi-level approval support** with percentage-based and specific approver logic
-- 💰 **Real-time currency conversion** for global expense tracking
-- 📱 **Role-based dashboards** for Employees, Managers, and Admins
-- 📧 **Email notifications** for approval requests and status updates
-- 📄 **OCR receipt scanning** for automated expense entry
+
+-   ✅ **Automated approval workflows** with configurable rules
+-   🔄 **Multi-level approval support** with percentage-based and specific approver logic
+-   💰 **Real-time currency conversion** for global expense tracking
+-   📱 **Role-based dashboards** for Employees, Managers, and Admins
+-   📧 **Email notifications** for approval requests and status updates
+-   📄 **OCR receipt scanning** for automated expense entry
 
 ---
 
 ## ✨ Features
 
 ### 🔐 Authentication & User Management
-- **Auto-Company Creation**: First signup automatically creates a company with selected country's currency
-- **Role-Based Access**: Three distinct roles - Admin, Manager, Employee
-- **User Management**: Admins can create, edit, and manage users
-- **Manager Relationships**: Assign employees to specific managers
-- **Bulk User Import**: Import multiple users via CSV/Excel
+
+-   **Auto-Company Creation**: First signup automatically creates a company with selected country's
+    currency
+-   **Role-Based Access**: Three distinct roles - Admin, Manager, Employee
+-   **User Management**: Admins can create, edit, and manage users
+-   **Manager Relationships**: Assign employees to specific managers
+-   **Bulk User Import**: Import multiple users via CSV/Excel
 
 ### 💸 Expense Submission (Employee)
-- **Multi-Currency Support**: Submit expenses in any currency
-- **Automatic Conversion**: Real-time conversion to company's default currency
-- **Receipt Upload**: Attach receipts and supporting documents
-- **OCR Integration**: Auto-extract data from receipt images
-- **Draft & Submit**: Save expenses as drafts or submit for approval
-- **Expense History**: View all submitted expenses with status tracking
+
+-   **Multi-Currency Support**: Submit expenses in any currency
+-   **Automatic Conversion**: Real-time conversion to company's default currency
+-   **Receipt Upload**: Attach receipts and supporting documents
+-   **OCR Integration**: Auto-extract data from receipt images
+-   **Draft & Submit**: Save expenses as drafts or submit for approval
+-   **Expense History**: View all submitted expenses with status tracking
 
 ### ✅ Approval Workflow (Manager/Admin)
-- **Smart Routing**: Automatic routing to appropriate approvers
-- **Manager-First Approval**: Optional manager approval before escalation
-- **Multi-Level Approvals**: Support for sequential approval chains
-- **Conditional Rules**: Flexible approval logic based on:
-  - **Percentage Rule**: Auto-approve when X% of approvers approve
-  - **Specific Approver**: Auto-approve when specific person approves (e.g., CFO)
-  - **Hybrid Rule**: Combination of percentage OR specific approver
-- **Bulk Actions**: Approve/reject multiple expenses at once
-- **Comments & Remarks**: Add notes during approval/rejection
-- **Approval History**: Complete audit trail of all decisions
+
+-   **Smart Routing**: Automatic routing to appropriate approvers
+-   **Manager-First Approval**: Optional manager approval before escalation
+-   **Multi-Level Approvals**: Support for sequential approval chains
+-   **Conditional Rules**: Flexible approval logic based on:
+    -   **Percentage Rule**: Auto-approve when X% of approvers approve
+    -   **Specific Approver**: Auto-approve when specific person approves (e.g., CFO)
+    -   **Hybrid Rule**: Combination of percentage OR specific approver
+-   **Bulk Actions**: Approve/reject multiple expenses at once
+-   **Comments & Remarks**: Add notes during approval/rejection
+-   **Approval History**: Complete audit trail of all decisions
 
 ### 🎯 Advanced Approval Rules
+
 ```
 Example 1: Sequential Approval
 Manager → Finance → Director → Approved
@@ -104,60 +115,66 @@ Example 4: Hybrid Rule
 ```
 
 ### 👨‍💼 Admin Capabilities
-- **Company Configuration**: Set default currency and country
-- **User Management**: Create, update, delete users
-- **Role Assignment**: Change user roles dynamically
-- **Approval Rules**: Configure approval workflows
-- **Override Approvals**: Admin can override any decision
-- **Analytics Dashboard**: View expense statistics and trends
-- **Bulk Operations**: Mass approve/reject expenses
+
+-   **Company Configuration**: Set default currency and country
+-   **User Management**: Create, update, delete users
+-   **Role Assignment**: Change user roles dynamically
+-   **Approval Rules**: Configure approval workflows
+-   **Override Approvals**: Admin can override any decision
+-   **Analytics Dashboard**: View expense statistics and trends
+-   **Bulk Operations**: Mass approve/reject expenses
 
 ### 📊 Dashboard & Reporting
-- **Real-time Statistics**: Live expense metrics and trends
-- **Visual Charts**: Interactive graphs for expense analysis
-- **Filtering & Search**: Advanced filters by date, category, status
-- **Export Options**: Download reports in Excel/CSV
-- **Department-wise Analysis**: Expense breakdown by department
+
+-   **Real-time Statistics**: Live expense metrics and trends
+-   **Visual Charts**: Interactive graphs for expense analysis
+-   **Filtering & Search**: Advanced filters by date, category, status
+-   **Export Options**: Download reports in Excel/CSV
+-   **Department-wise Analysis**: Expense breakdown by department
 
 ### 🌍 Multi-Currency Support
-- **200+ Currencies**: Support for all major currencies
-- **Real-time Rates**: Live exchange rate fetching
-- **Automatic Conversion**: Display in company's default currency
-- **Historical Tracking**: Maintain original currency and converted amount
+
+-   **200+ Currencies**: Support for all major currencies
+-   **Real-time Rates**: Live exchange rate fetching
+-   **Automatic Conversion**: Display in company's default currency
+-   **Historical Tracking**: Maintain original currency and converted amount
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Backend
-- **Runtime**: Node.js (v18+)
-- **Framework**: Express.js
-- **Database**: MongoDB with Mongoose ODM
-- **Authentication**: JWT + Express Session
-- **Validation**: Custom middleware
-- **File Upload**: Multer
-- **Email**: Nodemailer
-- **Scheduling**: Node-cron
-- **APIs**: 
-  - [Exchange Rate API](https://exchangerate-api.com/) - Currency conversion
-  - [REST Countries](https://restcountries.com/) - Country/currency data
+
+-   **Runtime**: Node.js (v18+)
+-   **Framework**: Express.js
+-   **Database**: MongoDB with Mongoose ODM
+-   **Authentication**: JWT + Express Session
+-   **Validation**: Custom middleware
+-   **File Upload**: Multer
+-   **Email**: Nodemailer
+-   **Scheduling**: Node-cron
+-   **APIs**:
+    -   [Exchange Rate API](https://exchangerate-api.com/) - Currency conversion
+    -   [REST Countries](https://restcountries.com/) - Country/currency data
 
 ### Frontend
-- **Framework**: React 19.1.1
-- **Routing**: React Router DOM v7
-- **UI Library**: PrimeReact, TailwindCSS
-- **Forms**: Formik + Yup validation
-- **Charts**: Chart.js, Recharts
-- **Icons**: Lucide React, React Icons
-- **OCR**: Tesseract.js
-- **Build Tool**: Vite
+
+-   **Framework**: React 19.1.1
+-   **Routing**: React Router DOM v7
+-   **UI Library**: PrimeReact, TailwindCSS
+-   **Forms**: Formik + Yup validation
+-   **Charts**: Chart.js, Recharts
+-   **Icons**: Lucide React, React Icons
+-   **OCR**: Tesseract.js
+-   **Build Tool**: Vite
 
 ### DevOps & Tools
-- **Version Control**: Git
-- **Package Manager**: npm
-- **API Testing**: Postman (collection included)
-- **Code Quality**: ESLint
-- **Environment**: dotenv
+
+-   **Version Control**: Git
+-   **Package Manager**: npm
+-   **API Testing**: Postman (collection included)
+-   **Code Quality**: ESLint
+-   **Environment**: dotenv
 
 ---
 
@@ -213,10 +230,10 @@ Example 4: Hybrid Rule
 
 ### Prerequisites
 
-- **Node.js** (v18.0.0 or higher)
-- **MongoDB** (v5.0 or higher)
-- **npm** or **yarn**
-- **Git**
+-   **Node.js** (v18.0.0 or higher)
+-   **MongoDB** (v5.0 or higher)
+-   **npm** or **yarn**
+-   **Git**
 
 ### Clone Repository
 
@@ -356,10 +373,10 @@ Frontend will run on `http://localhost:5173`
 
 1. **Open Browser**: Navigate to `http://localhost:5173`
 2. **First Time Setup**:
-   - Click "Sign Up"
-   - Enter your details
-   - Select your country (auto-sets currency)
-   - Your company and admin account are created automatically
+    - Click "Sign Up"
+    - Enter your details
+    - Select your country (auto-sets currency)
+    - Your company and admin account are created automatically
 3. **Create Users**: As admin, create managers and employees
 4. **Configure Approval Rules**: Set up approval workflows
 5. **Submit Expenses**: Employees can now submit expenses
@@ -369,6 +386,7 @@ Frontend will run on `http://localhost:5173`
 ## 📚 API Documentation
 
 ### Base URL
+
 ```
 http://localhost:5000
 ```
@@ -534,31 +552,40 @@ Content-Type: application/json
 ### Rule Types Explained
 
 #### 1. **Sequential Approval**
+
 All approvers must approve in order.
+
 ```
 Step 1: Manager → Step 2: Finance → Step 3: Director → Approved
 ```
 
 #### 2. **Percentage Rule**
+
 Auto-approve when X% of approvers approve.
+
 ```
 60% of 5 approvers = 3 approvals needed
 Approver A ✓, B ✓, C ✓ (60% reached) → Auto-approved
 ```
 
 #### 3. **Specific Approver Rule**
+
 Auto-approve when specific person(s) approve.
+
 ```
 If CFO approves → Auto-approved (regardless of others)
 ```
 
 #### 4. **Hybrid Rule**
+
 Combination of percentage OR specific approver.
+
 ```
 (60% of approvers) OR (CFO approves) → Auto-approved
 ```
 
-For detailed approval flow documentation, see [APPROVAL_FLOW_DOCUMENTATION.md](server/APPROVAL_FLOW_DOCUMENTATION.md)
+For detailed approval flow documentation, see
+[APPROVAL_FLOW_DOCUMENTATION.md](server/APPROVAL_FLOW_DOCUMENTATION.md)
 
 ---
 
@@ -567,6 +594,7 @@ For detailed approval flow documentation, see [APPROVAL_FLOW_DOCUMENTATION.md](s
 ### Collections
 
 #### Users
+
 ```javascript
 {
   _id: ObjectId,
@@ -588,6 +616,7 @@ For detailed approval flow documentation, see [APPROVAL_FLOW_DOCUMENTATION.md](s
 ```
 
 #### Companies
+
 ```javascript
 {
   _id: ObjectId,
@@ -601,6 +630,7 @@ For detailed approval flow documentation, see [APPROVAL_FLOW_DOCUMENTATION.md](s
 ```
 
 #### Expenses
+
 ```javascript
 {
   _id: ObjectId,
@@ -631,6 +661,7 @@ For detailed approval flow documentation, see [APPROVAL_FLOW_DOCUMENTATION.md](s
 ```
 
 #### ApprovalRules
+
 ```javascript
 {
   _id: ObjectId,
@@ -651,6 +682,7 @@ For detailed approval flow documentation, see [APPROVAL_FLOW_DOCUMENTATION.md](s
 ```
 
 #### ApprovalFlows
+
 ```javascript
 {
   _id: ObjectId,
@@ -676,15 +708,19 @@ For detailed approval flow documentation, see [APPROVAL_FLOW_DOCUMENTATION.md](s
 ## 📸 Screenshots
 
 ### Employee Dashboard
+
 ![Employee Dashboard](docs/screenshots/employee-dashboard.png)
 
 ### Manager Approvals
+
 ![Manager Approvals](docs/screenshots/manager-approvals.png)
 
 ### Admin Panel
+
 ![Admin Panel](docs/screenshots/admin-panel.png)
 
 ### Approval Rules Configuration
+
 ![Approval Rules](docs/screenshots/approval-rules.png)
 
 ---
@@ -692,35 +728,39 @@ For detailed approval flow documentation, see [APPROVAL_FLOW_DOCUMENTATION.md](s
 ## 🗺️ Roadmap
 
 ### Phase 1: Core Features ✅
-- [x] User authentication and authorization
-- [x] Role-based access control
-- [x] Expense submission
-- [x] Multi-currency support
-- [x] Approval workflow engine
-- [x] Dashboard and reporting
+
+-   [x] User authentication and authorization
+-   [x] Role-based access control
+-   [x] Expense submission
+-   [x] Multi-currency support
+-   [x] Approval workflow engine
+-   [x] Dashboard and reporting
 
 ### Phase 2: Enhanced Features 🚧
-- [ ] Email notifications
-- [ ] OCR receipt scanning (UI integration)
-- [ ] Mobile app (React Native)
-- [ ] Advanced analytics
-- [ ] Budget management
-- [ ] Expense categories customization
+
+-   [ ] Email notifications
+-   [ ] OCR receipt scanning (UI integration)
+-   [ ] Mobile app (React Native)
+-   [ ] Advanced analytics
+-   [ ] Budget management
+-   [ ] Expense categories customization
 
 ### Phase 3: Enterprise Features 📋
-- [ ] Multi-company support
-- [ ] SSO integration (SAML, OAuth)
-- [ ] Advanced reporting (custom reports)
-- [ ] API rate limiting
-- [ ] Audit logs
-- [ ] Compliance reports
+
+-   [ ] Multi-company support
+-   [ ] SSO integration (SAML, OAuth)
+-   [ ] Advanced reporting (custom reports)
+-   [ ] API rate limiting
+-   [ ] Audit logs
+-   [ ] Compliance reports
 
 ### Phase 4: AI & Automation 🤖
-- [ ] AI-powered fraud detection
-- [ ] Smart categorization
-- [ ] Predictive analytics
-- [ ] Chatbot support
-- [ ] Auto-receipt matching
+
+-   [ ] AI-powered fraud detection
+-   [ ] Smart categorization
+-   [ ] Predictive analytics
+-   [ ] Chatbot support
+-   [ ] Auto-receipt matching
 
 ---
 
@@ -730,26 +770,26 @@ We welcome contributions! Please follow these steps:
 
 1. **Fork the repository**
 2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/AmazingFeature
-   ```
+    ```bash
+    git checkout -b feature/AmazingFeature
+    ```
 3. **Commit your changes**
-   ```bash
-   git commit -m 'Add some AmazingFeature'
-   ```
+    ```bash
+    git commit -m 'Add some AmazingFeature'
+    ```
 4. **Push to the branch**
-   ```bash
-   git push origin feature/AmazingFeature
-   ```
+    ```bash
+    git push origin feature/AmazingFeature
+    ```
 5. **Open a Pull Request**
 
 ### Code Style Guidelines
 
-- Follow ESLint configuration
-- Write meaningful commit messages
-- Add comments for complex logic
-- Update documentation for API changes
-- Write tests for new features
+-   Follow ESLint configuration
+-   Write meaningful commit messages
+-   Add comments for complex logic
+-   Update documentation for API changes
+-   Write tests for new features
 
 ---
 
@@ -761,10 +801,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Team
 
-- **Project Lead**: [Your Name]
-- **Backend Developer**: [Your Name]
-- **Frontend Developer**: [Your Name]
-- **UI/UX Designer**: [Your Name]
+-   **Project Lead**: [Your Name]
+-   **Backend Developer**: [Your Name]
+-   **Frontend Developer**: [Your Name]
+-   **UI/UX Designer**: [Your Name]
 
 ---
 
@@ -774,7 +814,8 @@ For support, email support@expensetracker.com or join our Slack channel.
 
 ### Bug Reports
 
-Please use the [GitHub Issues](https://github.com/jackey-22/Expense-tracker/issues) page to report bugs.
+Please use the [GitHub Issues](https://github.com/jackey-22/Expense-tracker/issues) page to report
+bugs.
 
 ### Feature Requests
 
@@ -784,13 +825,13 @@ We love feature requests! Please open an issue with the `enhancement` label.
 
 ## 🙏 Acknowledgments
 
-- [Express.js](https://expressjs.com/) - Fast, unopinionated web framework
-- [React](https://react.dev/) - UI library
-- [MongoDB](https://www.mongodb.com/) - Database
-- [PrimeReact](https://primereact.org/) - UI components
-- [TailwindCSS](https://tailwindcss.com/) - CSS framework
-- [Exchange Rate API](https://exchangerate-api.com/) - Currency data
-- [REST Countries](https://restcountries.com/) - Country data
+-   [Express.js](https://expressjs.com/) - Fast, unopinionated web framework
+-   [React](https://react.dev/) - UI library
+-   [MongoDB](https://www.mongodb.com/) - Database
+-   [PrimeReact](https://primereact.org/) - UI components
+-   [TailwindCSS](https://tailwindcss.com/) - CSS framework
+-   [Exchange Rate API](https://exchangerate-api.com/) - Currency data
+-   [REST Countries](https://restcountries.com/) - Country data
 
 ---
 
