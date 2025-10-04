@@ -5,16 +5,16 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import {
 	LayoutDashboard,
-	FileText,
-	History,
-	Users,
 	CheckCircle,
+	History,
 	Settings,
 	LogOut,
+	Users,
+	FileText,
 } from 'lucide-react';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
-export default function Sidebar({ isVisible, onClose }) {
+export default function ManagerSidebar({ isVisible, onClose }) {
 	const navigate = useNavigate();
 	const { logout } = useAuth();
 
@@ -33,11 +33,6 @@ export default function Sidebar({ isVisible, onClose }) {
 			label: 'Expense History',
 			icon: <History size={20} />,
 			route: '/manager/history',
-		},
-		{
-			label: 'Profile',
-			icon: <Settings size={20} />,
-			route: '/manager/profile',
 		},
 	];
 
@@ -70,8 +65,8 @@ export default function Sidebar({ isVisible, onClose }) {
 						className={({ isActive }) =>
 							`w-full text-base font-medium flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 ${
 								isActive
-									? 'bg-gradient-to-r from-blue-500 to-teal-600 text-white shadow-lg'
-									: 'text-gray-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-teal-50 hover:text-gray-900'
+									? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+									: 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:text-gray-900'
 							}`
 						}
 						onClick={onClose}

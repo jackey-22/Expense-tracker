@@ -10,7 +10,7 @@ export default function PageLayout({ children }) {
 	const closeSidebar = () => setSidebarVisible(false);
 
 	return (
-		<div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50  overflow-hidden">
+		<div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-indigo-100 overflow-hidden">
 			{/* Header */}
 			<div className="fixed top-0 left-0 right-0 z-50">
 				<Header onToggleSidebar={toggleSidebar} />
@@ -27,7 +27,7 @@ export default function PageLayout({ children }) {
 
 				{/* Sidebar */}
 				<div
-					className={`fixed z-40 top-16 bottom-0 left-0 w-64 p-4 bg-white border-r border-gray-200 shadow-lg transition-transform duration-300 ease-in-out
+					className={`fixed z-40 top-16 bottom-0 left-0 w-64 p-4 pt-10 bg-white border-r border-gray-200 shadow-lg transition-transform duration-300 ease-in-out
                         ${sidebarVisible ? 'translate-x-0' : '-translate-x-full'}
                         md:static md:translate-x-0 md:z-auto md:shadow-none overflow-y-auto`}
 				>
