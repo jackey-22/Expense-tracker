@@ -82,7 +82,6 @@ Companies struggle with:
 
 ---
 
-// ...existing code...
 
 Our system provides:
 
