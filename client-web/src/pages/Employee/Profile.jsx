@@ -4,15 +4,15 @@ import PageLayout from '../../components/employeelayout/PageLayout';
 
 const EmployeeProfile = () => {
 	const [employee, setEmployee] = useState({
-		name: 'Jay Gohil',
-		email: 'jgohil22042006@gmail.com',
+		name: 'Bansi Patel',
+		email: 'bansi@gmail.com',
 		phone: '+1 (555) 987-6543',
 		department: 'IT',
 		designation: 'Software Engineer',
 		joiningDate: '2022-06-15',
 		company: { name: 'Odoo' },
 		profilePic:
-			'https://ui-avatars.com/api/?name=Jay+Gohil&background=22c55e&color=ffffff&size=150',
+			'https://ui-avatars.com/api/?name=Bansi+Patel&background=22c55e&color=ffffff&size=150',
 	});
 
 	const handleImageUpload = (event) => {

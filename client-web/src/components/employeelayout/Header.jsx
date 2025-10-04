@@ -45,7 +45,7 @@ export default function Header({ onToggleSidebar }) {
 				>
 					<div className="text-right hidden sm:block">
 						<div className="font-semibold text-gray-800 text-sm">
-							{currentUser?.name || 'Jay Gohil'}
+							{currentUser?.name || 'Bansi Patel'}
 						</div>
 						<div className="text-xs text-gray-500">
 							{currentUser?.department || 'IT Department'}

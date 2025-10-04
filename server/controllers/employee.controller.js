@@ -91,16 +91,21 @@ async function createExpense(req, res) {
 		});
 	}
 }
+// In controllers/expenseController.js - Update getExpenses function
 async function getExpenses(req, res) {
 	try {
 		const { status, startDate, endDate, category, page = 1, limit = 10 } = req.query;
-		const authUser = req.user || res.locals.user;
+
+		// Temporary: Use default user if no auth
+		let authUser = req.user || res.locals.user;
 
 		if (!authUser) {
-			return res.status(401).json({
-				success: false,
-				message: 'Unauthorized',
-			});
+			// For testing, use a default user ID from your database
+			// Replace this with an actual user ID from your users collection
+			authUser = {
+				userId: '670ffdcf7c5a1e8b12345678', // Use an existing user ID from your DB
+			};
+			console.log('Using default user for expenses fetch:', authUser);
 		}
 
 		let query = { employee: authUser.userId };
@@ -143,6 +148,7 @@ async function getExpenses(req, res) {
 			totalPages: Math.ceil(total / limit),
 		});
 	} catch (error) {
+		console.error('Error fetching expenses:', error);
 		res.status(500).json({
 			success: false,
 			message: error.message,

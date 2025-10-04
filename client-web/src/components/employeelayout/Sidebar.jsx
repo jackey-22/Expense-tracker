@@ -36,11 +36,11 @@ export default function Sidebar({ isVisible, onClose }) {
 			icon: <FileText size={20} />,
 			route: '/employee/expense-history',
 		},
-		{
-			label: 'Approvals',
-			icon: <CheckCircle size={20} />,
-			route: '/approvals',
-		},
+		// {
+		// 	label: 'Approvals',
+		// 	icon: <CheckCircle size={20} />,
+		// 	route: '/approvals',
+		// },
 	];
 
 	const handleLogout = async () => {
