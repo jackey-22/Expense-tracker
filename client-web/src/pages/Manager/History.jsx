@@ -98,13 +98,11 @@ const History = () => {
 
 	return (
 		<PageLayout>
-			<div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-indigo-200 p-10">
-				<h1 className="text-3xl font-bold text-indigo-800 mb-6 tracking-tight">
-					Expense History
-				</h1>
+			<div className="min-h-screen from-indigo-100 via-white to-indigo-200 p-10">
+				<h1 className="text-3xl font-bold text-blue-800 tracking-tight">Expense History</h1>
 
 				{/* Filters */}
-				<div className="flex flex-wrap gap-4 mb-6">
+				<div className="flex flex-wrap gap-4 mb-6 pt-4">
 					<Dropdown
 						value={statusFilter}
 						options={statusOptions}
