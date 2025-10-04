@@ -24,17 +24,17 @@ export default function Sidebar({ isVisible, onClose }) {
 		{
 			label: 'Dashboard',
 			icon: <LayoutDashboard size={20} />,
-			route: 'employee/dashboard',
+			route: '/employee/dashboard',
 		},
 		{
 			label: 'Create Expense',
 			icon: <Receipt size={20} />,
-			route: 'employee/create-expense',
+			route: '/employee/create-expense',
 		},
 		{
 			label: 'My Expenses',
 			icon: <FileText size={20} />,
-			route: 'employee/expenses',
+			route: '/employee/expense-history',
 		},
 		{
 			label: 'Approvals',
