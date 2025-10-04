@@ -7,20 +7,20 @@ export default function Sidebar({ isVisible, onClose }) {
 	const role = localStorage.getItem('role')?.toLowerCase();
 
 	const roleRoutes = {
-		student: [
-			{ name: 'Dashboard', route: '/student/dashboard', icon: 'pi pi-home' },
-			{ name: 'Courses', route: '/student/course-page', icon: 'pi pi-book' },
-			{ name: 'My Courses', route: '/student/my-courses', icon: 'pi pi-book' },
-			{ name: 'Profile', route: '/student/profile', icon: 'pi pi-user' },
-		],
-		instructor: [
-			{ name: 'Dashboard', route: '/instructor/dashboard', icon: 'pi pi-home' },
-			{ name: 'Create Course', route: '/instructor/create-course', icon: 'pi pi-plus' },
-			{ name: 'Profile', route: '/instructor/profile', icon: 'pi pi-user' },
-		],
+		// student: [
+		// 	{ name: 'Dashboard', route: '/student/dashboard', icon: 'pi pi-home' },
+		// 	{ name: 'Courses', route: '/student/course-page', icon: 'pi pi-book' },
+		// 	{ name: 'My Courses', route: '/student/my-courses', icon: 'pi pi-book' },
+		// 	{ name: 'Profile', route: '/student/profile', icon: 'pi pi-user' },
+		// ],
+		// instructor: [
+		// 	{ name: 'Dashboard', route: '/instructor/dashboard', icon: 'pi pi-home' },
+		// 	{ name: 'Create Course', route: '/instructor/create-course', icon: 'pi pi-plus' },
+		// 	{ name: 'Profile', route: '/instructor/profile', icon: 'pi pi-user' },
+		// ],
 		admin: [
 			{ name: 'Dashboard', route: '/admin/dashboard', icon: 'pi pi-home' },
-			{ name: 'Rules', route: '/admin/approve-rules', icon: 'pi pi-list-check' },
+			{ name: 'Rules', route: '/admin/approval-rules', icon: 'pi pi-list-check' },
 			{ name: 'Expenses', route: '/admin/manage-expenses', icon: 'pi pi-users' },
 			{ name: 'Users', route: '/admin/manage-users', icon: 'pi pi-users' },
 		],
