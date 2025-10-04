@@ -44,9 +44,9 @@ const routes = createBrowserRouter([
 		errorElement: <ErrorElement />,
 		children: [
 			{ path: 'dashboard', element: <AdminDashboard /> },
-			// { path: 'approval-rules', element: <ApprovalRule /> },
-			// { path: 'manage-expenses', element: <ManageExpenses /> },
-			// { path: 'manage-users', element: <UserManagement /> },
+			{ path: 'approval-rules', element: <ApprovalRule /> },
+			{ path: 'manage-expenses', element: <ManageExpenses /> },
+			{ path: 'manage-users', element: <UserManagement /> },
 		],
 	},
 	{

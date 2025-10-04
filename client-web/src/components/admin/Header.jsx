@@ -22,7 +22,7 @@ export default function Header({ onToggleSidebar }) {
 				<div className="flex items-center gap-2">
 					{/* <img src={logo} alt="Logo" className="w-8 h-8 rounded-full object-contain" /> */}
 					<h1 className="text-2xl font-bold tracking-tight text-gray-800">
-						Echo_spark
+						Expense Tracker
 					</h1>
 				</div>
 			</div>
