@@ -1,63 +1,64 @@
 # Contributing to Expense Tracker
 
-First off, thank you for considering contributing to Expense Tracker! It's people like you that make this project better for everyone.
+First off, thank you for considering contributing to Expense Tracker! It's people like you that make
+this project better for everyone.
 
 ## 🤝 Code of Conduct
 
 By participating in this project, you are expected to uphold our Code of Conduct:
 
-- Be respectful and inclusive
-- Welcome newcomers and help them learn
-- Focus on what is best for the community
-- Show empathy towards other community members
+-   Be respectful and inclusive
+-   Welcome newcomers and help them learn
+-   Focus on what is best for the community
+-   Show empathy towards other community members
 
 ## 🚀 How Can I Contribute?
 
 ### Reporting Bugs
 
-Before creating bug reports, please check existing issues as you might find that you don't need to create one. When you create a bug report, include as many details as possible:
+Before creating bug reports, please check existing issues as you might find that you don't need to
+create one. When you create a bug report, include as many details as possible:
 
-- **Use a clear and descriptive title**
-- **Describe the exact steps to reproduce the problem**
-- **Provide specific examples**
-- **Describe the behavior you observed and what you expected**
-- **Include screenshots if possible**
-- **Include your environment details** (OS, Node version, browser, etc.)
+-   **Use a clear and descriptive title**
+-   **Describe the exact steps to reproduce the problem**
+-   **Provide specific examples**
+-   **Describe the behavior you observed and what you expected**
+-   **Include screenshots if possible**
+-   **Include your environment details** (OS, Node version, browser, etc.)
 
 #### Bug Report Template
 
 ```markdown
-**Description**
-A clear description of what the bug is.
+**Description** A clear description of what the bug is.
 
-**To Reproduce**
-Steps to reproduce:
+**To Reproduce** Steps to reproduce:
+
 1. Go to '...'
 2. Click on '...'
 3. Scroll down to '...'
 4. See error
 
-**Expected behavior**
-What you expected to happen.
+**Expected behavior** What you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots.
+**Screenshots** If applicable, add screenshots.
 
 **Environment:**
- - OS: [e.g. Windows 11]
- - Node: [e.g. 18.0.0]
- - Browser: [e.g. Chrome 120]
- - Version: [e.g. 1.0.0]
+
+-   OS: [e.g. Windows 11]
+-   Node: [e.g. 18.0.0]
+-   Browser: [e.g. Chrome 120]
+-   Version: [e.g. 1.0.0]
 ```
 
 ### Suggesting Enhancements
 
-Enhancement suggestions are tracked as GitHub issues. When creating an enhancement suggestion, include:
+Enhancement suggestions are tracked as GitHub issues. When creating an enhancement suggestion,
+include:
 
-- **Use a clear and descriptive title**
-- **Provide a detailed description of the enhancement**
-- **Explain why this enhancement would be useful**
-- **List some examples of how it would be used**
+-   **Use a clear and descriptive title**
+-   **Provide a detailed description of the enhancement**
+-   **Explain why this enhancement would be useful**
+-   **List some examples of how it would be used**
 
 ### Pull Requests
 
@@ -114,15 +115,17 @@ footer (optional)
 ```
 
 **Types:**
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation changes
-- `style`: Code style changes (formatting, etc.)
-- `refactor`: Code refactoring
-- `test`: Adding or updating tests
-- `chore`: Maintenance tasks
+
+-   `feat`: New feature
+-   `fix`: Bug fix
+-   `docs`: Documentation changes
+-   `style`: Code style changes (formatting, etc.)
+-   `refactor`: Code refactoring
+-   `test`: Adding or updating tests
+-   `chore`: Maintenance tasks
 
 **Examples:**
+
 ```
 feat(expense): add multi-currency support
 
@@ -145,6 +148,7 @@ Fixes #456
 ### Testing Your Changes
 
 #### Backend Testing
+
 ```bash
 cd server
 
@@ -159,6 +163,7 @@ curl http://localhost:5000/api/test
 ```
 
 #### Frontend Testing
+
 ```bash
 cd client-web
 
@@ -175,51 +180,58 @@ npm run build
 ### Submitting Pull Request
 
 1. **Update your fork**
+
 ```bash
 git fetch upstream
 git rebase upstream/main
 ```
 
 2. **Push your changes**
+
 ```bash
 git push origin feature/amazing-feature
 ```
 
 3. **Create Pull Request**
-   - Go to your fork on GitHub
-   - Click "New Pull Request"
-   - Select your feature branch
-   - Fill in the PR template
-   - Link related issues
+    - Go to your fork on GitHub
+    - Click "New Pull Request"
+    - Select your feature branch
+    - Fill in the PR template
+    - Link related issues
 
 #### Pull Request Template
 
 ```markdown
 ## Description
+
 Brief description of changes
 
 ## Type of Change
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Breaking change
-- [ ] Documentation update
+
+-   [ ] Bug fix
+-   [ ] New feature
+-   [ ] Breaking change
+-   [ ] Documentation update
 
 ## Testing
-- [ ] Tested locally
-- [ ] Added/updated tests
-- [ ] All tests pass
+
+-   [ ] Tested locally
+-   [ ] Added/updated tests
+-   [ ] All tests pass
 
 ## Checklist
-- [ ] Code follows project style guidelines
-- [ ] Self-reviewed code
-- [ ] Commented complex code
-- [ ] Updated documentation
-- [ ] No new warnings
-- [ ] Added tests that prove fix/feature works
+
+-   [ ] Code follows project style guidelines
+-   [ ] Self-reviewed code
+-   [ ] Commented complex code
+-   [ ] Updated documentation
+-   [ ] No new warnings
+-   [ ] Added tests that prove fix/feature works
 
 ## Screenshots (if applicable)
 
 ## Related Issues
+
 Closes #(issue number)
 ```
 
@@ -227,70 +239,71 @@ Closes #(issue number)
 
 ### JavaScript/React
 
-- Use **ES6+** syntax
-- Use **arrow functions** for callbacks
-- Use **async/await** over promises
-- Use **destructuring** where appropriate
-- Use **template literals** for strings
-- **2 spaces** for indentation
-- **Single quotes** for strings
-- **Semicolons** at end of statements
+-   Use **ES6+** syntax
+-   Use **arrow functions** for callbacks
+-   Use **async/await** over promises
+-   Use **destructuring** where appropriate
+-   Use **template literals** for strings
+-   **2 spaces** for indentation
+-   **Single quotes** for strings
+-   **Semicolons** at end of statements
 
 #### Good Example
+
 ```javascript
 // ✅ Good
 const fetchExpenses = async (userId) => {
-  try {
-    const response = await axios.get(`/api/expenses/${userId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching expenses:', error);
-    throw error;
-  }
+	try {
+		const response = await axios.get(`/api/expenses/${userId}`);
+		return response.data;
+	} catch (error) {
+		console.error('Error fetching expenses:', error);
+		throw error;
+	}
 };
 ```
 
 #### Bad Example
+
 ```javascript
 // ❌ Bad
 function fetchExpenses(userId) {
-  return axios.get('/api/expenses/' + userId).then(function(response) {
-    return response.data
-  }).catch(function(error) {
-    console.log(error)
-  })
+	return axios
+		.get('/api/expenses/' + userId)
+		.then(function (response) {
+			return response.data;
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
 }
 ```
 
 ### React Components
 
-- Use **functional components** with hooks
-- Use **PascalCase** for component names
-- Use **camelCase** for props and variables
-- Keep components **small and focused**
-- Extract reusable logic into **custom hooks**
+-   Use **functional components** with hooks
+-   Use **PascalCase** for component names
+-   Use **camelCase** for props and variables
+-   Keep components **small and focused**
+-   Extract reusable logic into **custom hooks**
 
 ```javascript
 // ✅ Good
 import React, { useState, useEffect } from 'react';
 
 const ExpenseList = ({ userId, onSelect }) => {
-  const [expenses, setExpenses] = useState([]);
-  const [loading, setLoading] = useState(true);
+	const [expenses, setExpenses] = useState([]);
+	const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchExpenses();
-  }, [userId]);
+	useEffect(() => {
+		fetchExpenses();
+	}, [userId]);
 
-  const fetchExpenses = async () => {
-    // Implementation
-  };
+	const fetchExpenses = async () => {
+		// Implementation
+	};
 
-  return (
-    <div className="expense-list">
-      {/* Component JSX */}
-    </div>
-  );
+	return <div className="expense-list">{/* Component JSX */}</div>;
 };
 
 export default ExpenseList;
@@ -298,25 +311,25 @@ export default ExpenseList;
 
 ### CSS/TailwindCSS
 
-- Use **TailwindCSS** utility classes
-- Use **kebab-case** for custom CSS classes
-- Keep custom CSS minimal
-- Use **responsive** utilities (sm:, md:, lg:)
+-   Use **TailwindCSS** utility classes
+-   Use **kebab-case** for custom CSS classes
+-   Keep custom CSS minimal
+-   Use **responsive** utilities (sm:, md:, lg:)
 
 ```jsx
 // ✅ Good
 <div className="flex flex-col gap-4 p-6 bg-white rounded-lg shadow-md">
-  <h2 className="text-2xl font-bold text-gray-800">Title</h2>
-  <p className="text-gray-600">Description</p>
+	<h2 className="text-2xl font-bold text-gray-800">Title</h2>
+	<p className="text-gray-600">Description</p>
 </div>
 ```
 
 ### API Routes
 
-- Use **RESTful** conventions
-- Use **plural** nouns for collections
-- Use **HTTP** status codes correctly
-- Return **consistent** JSON responses
+-   Use **RESTful** conventions
+-   Use **plural** nouns for collections
+-   Use **HTTP** status codes correctly
+-   Return **consistent** JSON responses
 
 ```javascript
 // ✅ Good API structure
@@ -340,10 +353,10 @@ export default ExpenseList;
 
 ## 📚 Documentation
 
-- Update **README.md** if you change functionality
-- Add **JSDoc comments** for functions
-- Update **API documentation** for endpoint changes
-- Add **inline comments** for complex logic
+-   Update **README.md** if you change functionality
+-   Add **JSDoc comments** for functions
+-   Update **API documentation** for endpoint changes
+-   Add **inline comments** for complex logic
 
 ```javascript
 /**
@@ -353,8 +366,8 @@ export default ExpenseList;
  * @returns {Number} Percentage of approvals (0-100)
  */
 const calculateApprovalPercentage = (approvers, approvedCount) => {
-  if (!approvers.length) return 0;
-  return (approvedCount / approvers.length) * 100;
+	if (!approvers.length) return 0;
+	return (approvedCount / approvers.length) * 100;
 };
 ```
 
@@ -362,42 +375,45 @@ const calculateApprovalPercentage = (approvers, approvedCount) => {
 
 ### What to Test
 
-- **Critical user flows** (login, submit expense, approve expense)
-- **Edge cases** (empty states, error states)
-- **Validation logic**
-- **API endpoints**
-- **Utility functions**
+-   **Critical user flows** (login, submit expense, approve expense)
+-   **Edge cases** (empty states, error states)
+-   **Validation logic**
+-   **API endpoints**
+-   **Utility functions**
 
 ### Testing Best Practices
 
-- Write **clear test descriptions**
-- Test **one thing per test**
-- Use **meaningful assertions**
-- Mock **external dependencies**
-- Keep tests **fast and independent**
+-   Write **clear test descriptions**
+-   Test **one thing per test**
+-   Use **meaningful assertions**
+-   Mock **external dependencies**
+-   Keep tests **fast and independent**
 
 ## 🎯 Areas for Contribution
 
 ### High Priority
-- [ ] Email notification system
-- [ ] OCR receipt scanning integration
-- [ ] Mobile responsive improvements
-- [ ] Performance optimizations
-- [ ] Test coverage
+
+-   [ ] Email notification system
+-   [ ] OCR receipt scanning integration
+-   [ ] Mobile responsive improvements
+-   [ ] Performance optimizations
+-   [ ] Test coverage
 
 ### Medium Priority
-- [ ] Advanced reporting
-- [ ] Export functionality (PDF, Excel)
-- [ ] Multi-language support
-- [ ] Dark mode
-- [ ] Accessibility improvements
+
+-   [ ] Advanced reporting
+-   [ ] Export functionality (PDF, Excel)
+-   [ ] Multi-language support
+-   [ ] Dark mode
+-   [ ] Accessibility improvements
 
 ### Nice to Have
-- [ ] Mobile app (React Native)
-- [ ] Desktop app (Electron)
-- [ ] Browser extensions
-- [ ] Slack/Teams integration
-- [ ] AI-powered features
+
+-   [ ] Mobile app (React Native)
+-   [ ] Desktop app (Electron)
+-   [ ] Browser extensions
+-   [ ] Slack/Teams integration
+-   [ ] AI-powered features
 
 ## 📝 License
 
@@ -406,9 +422,10 @@ By contributing, you agree that your contributions will be licensed under the MI
 ## ❓ Questions?
 
 Feel free to reach out:
-- Create an issue with the `question` label
-- Email: support@expensetracker.com
-- Join our community chat
+
+-   Create an issue with the `question` label
+-   Email: support@expensetracker.com
+-   Join our community chat
 
 ## 🙏 Thank You!
 

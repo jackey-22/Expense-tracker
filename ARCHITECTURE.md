@@ -556,6 +556,7 @@ Detailed State Transitions:
 **Visual Documentation Complete ✓**
 
 For more details, see:
-- [README.md](README.md) - Full documentation
-- [APPROVAL_FLOW_DOCUMENTATION.md](server/APPROVAL_FLOW_DOCUMENTATION.md) - Approval logic
-- [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) - Implementation summary
+
+-   [README.md](README.md) - Full documentation
+-   [APPROVAL_FLOW_DOCUMENTATION.md](server/APPROVAL_FLOW_DOCUMENTATION.md) - Approval logic
+-   [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) - Implementation summary

@@ -6,11 +6,11 @@ Get your Expense Tracker up and running in 5 minutes!
 
 Before you begin, ensure you have:
 
-- [ ] **Node.js** v18.0.0 or higher ([Download](https://nodejs.org/))
-- [ ] **MongoDB** v5.0 or higher ([Download](https://www.mongodb.com/try/download/community))
-- [ ] **Git** ([Download](https://git-scm.com/downloads))
-- [ ] A code editor (VS Code recommended)
-- [ ] Terminal/Command Prompt
+-   [ ] **Node.js** v18.0.0 or higher ([Download](https://nodejs.org/))
+-   [ ] **MongoDB** v5.0 or higher ([Download](https://www.mongodb.com/try/download/community))
+-   [ ] **Git** ([Download](https://git-scm.com/downloads))
+-   [ ] A code editor (VS Code recommended)
+-   [ ] Terminal/Command Prompt
 
 ## ⚡ 5-Minute Setup
 
@@ -41,6 +41,7 @@ cp .env.example .env
 ```
 
 Edit `.env` with minimum required config:
+
 ```env
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/expense-tracker
@@ -57,6 +58,7 @@ cp .env.example .env
 ```
 
 Edit `.env`:
+
 ```env
 VITE_API_URL=http://localhost:5000
 ```
@@ -79,12 +81,14 @@ brew services start mongodb-community
 Open **two terminals**:
 
 **Terminal 1 - Backend:**
+
 ```bash
 cd server
 npm run dev
 ```
 
 **Terminal 2 - Frontend:**
+
 ```bash
 cd client-web
 npm run dev
@@ -93,6 +97,7 @@ npm run dev
 ### Step 5: Access the App (30 sec)
 
 Open your browser and go to:
+
 ```
 http://localhost:5173
 ```
@@ -107,10 +112,10 @@ http://localhost:5173
 
 1. Click **"Sign Up"**
 2. Fill in the form:
-   - Name: `Admin User`
-   - Email: `admin@company.com`
-   - Password: `SecurePass123!`
-   - Country: `United States` (or your country)
+    - Name: `Admin User`
+    - Email: `admin@company.com`
+    - Password: `SecurePass123!`
+    - Country: `United States` (or your country)
 3. Click **"Create Account"**
 
 ✅ Your company is automatically created with USD currency!
@@ -120,27 +125,29 @@ http://localhost:5173
 As an admin, create some users:
 
 **Manager:**
-- Name: `John Manager`
-- Email: `john@company.com`
-- Role: `Manager`
-- Department: `Finance`
+
+-   Name: `John Manager`
+-   Email: `john@company.com`
+-   Role: `Manager`
+-   Department: `Finance`
 
 **Employee:**
-- Name: `Jane Employee`
-- Email: `jane@company.com`
-- Role: `Employee`
-- Manager: `John Manager`
-- Department: `Sales`
+
+-   Name: `Jane Employee`
+-   Email: `jane@company.com`
+-   Role: `Employee`
+-   Manager: `John Manager`
+-   Department: `Sales`
 
 ### 3. Set Up Approval Rules
 
 1. Go to **"Approval Rules"**
 2. Click **"Create New Rule"**
 3. Configure:
-   - **Rule Name**: `Standard Approval`
-   - **Manager First**: ✅ (checked)
-   - **Add Approvers**: Select `John Manager`
-   - **Rule Type**: `Sequential`
+    - **Rule Name**: `Standard Approval`
+    - **Manager First**: ✅ (checked)
+    - **Add Approvers**: Select `John Manager`
+    - **Rule Type**: `Sequential`
 4. Click **"Save Rule"**
 
 ### 4. Submit Your First Expense
@@ -149,11 +156,11 @@ Login as `jane@company.com`:
 
 1. Go to **"Submit Expense"**
 2. Fill in:
-   - Amount: `150.00`
-   - Currency: `USD`
-   - Category: `Travel`
-   - Description: `Client meeting taxi`
-   - Date: Today's date
+    - Amount: `150.00`
+    - Currency: `USD`
+    - Category: `Travel`
+    - Description: `Client meeting taxi`
+    - Date: Today's date
 3. Upload a receipt (optional)
 4. Click **"Submit for Approval"**
 
@@ -179,6 +186,7 @@ Login as `john@company.com`:
 **Error:** `MongoNetworkError: connect ECONNREFUSED`
 
 **Solutions:**
+
 ```bash
 # Check if MongoDB is running
 # Windows:
@@ -204,6 +212,7 @@ brew services start mongodb-community
 **Error:** `EADDRINUSE: address already in use :::5000`
 
 **Solutions:**
+
 ```bash
 # Find and kill the process using port 5000
 # Windows:
@@ -222,6 +231,7 @@ PORT=5001
 **Error:** `Module not found` or dependencies issues
 
 **Solutions:**
+
 ```bash
 # Clear cache and reinstall
 cd client-web
@@ -236,8 +246,8 @@ npm ci
 
 **Error:** `Access-Control-Allow-Origin`
 
-**Solution:**
-Check that frontend .env has correct backend URL:
+**Solution:** Check that frontend .env has correct backend URL:
+
 ```env
 VITE_API_URL=http://localhost:5000
 ```
@@ -251,8 +261,9 @@ And restart both servers.
 ### Hot Reload
 
 Both servers support hot reload:
-- Backend: `nodemon` watches for file changes
-- Frontend: `Vite` provides instant HMR
+
+-   Backend: `nodemon` watches for file changes
+-   Frontend: `Vite` provides instant HMR
 
 ### Useful Commands
 
@@ -288,19 +299,20 @@ Use the provided Postman collection:
 
 1. Import `Expense-Tracker.postman_collection.json`
 2. Set environment variables:
-   - `base_url`: `http://localhost:5000`
-   - `token`: (will be set after login)
+    - `base_url`: `http://localhost:5000`
+    - `token`: (will be set after login)
 3. Start with `/auth/signup` and `/auth/login`
 
 ### VS Code Extensions
 
 Recommended extensions:
-- ESLint
-- Prettier
-- MongoDB for VS Code
-- REST Client
-- Tailwind CSS IntelliSense
-- React Developer Tools
+
+-   ESLint
+-   Prettier
+-   MongoDB for VS Code
+-   REST Client
+-   Tailwind CSS IntelliSense
+-   React Developer Tools
 
 ---
 
@@ -318,20 +330,20 @@ Now that you're up and running:
 
 ## 🆘 Need Help?
 
-- 📧 Email: support@expensetracker.com
-- 🐛 Issues: [GitHub Issues](https://github.com/jackey-22/Expense-tracker/issues)
-- 💬 Discord: [Join our community](#)
-- 📖 Docs: [Full Documentation](README.md)
+-   📧 Email: support@expensetracker.com
+-   🐛 Issues: [GitHub Issues](https://github.com/jackey-22/Expense-tracker/issues)
+-   💬 Discord: [Join our community](#)
+-   📖 Docs: [Full Documentation](README.md)
 
 ---
 
 ## 🎓 Learning Resources
 
-- [Express.js Guide](https://expressjs.com/en/guide/routing.html)
-- [React Documentation](https://react.dev/)
-- [MongoDB Manual](https://docs.mongodb.com/manual/)
-- [PrimeReact Components](https://primereact.org/)
-- [TailwindCSS Docs](https://tailwindcss.com/docs)
+-   [Express.js Guide](https://expressjs.com/en/guide/routing.html)
+-   [React Documentation](https://react.dev/)
+-   [MongoDB Manual](https://docs.mongodb.com/manual/)
+-   [PrimeReact Components](https://primereact.org/)
+-   [TailwindCSS Docs](https://tailwindcss.com/docs)
 
 ---
 
