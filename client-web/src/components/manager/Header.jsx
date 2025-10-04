@@ -11,11 +11,7 @@ export default function Header({ onToggleSidebar }) {
 	const { currentUser } = useAuth();
 
 	function handleProfileClick() {
-		navigate('/profile');
-	}
-
-	function handleNotificationsClick() {
-		navigate('/notifications');
+		navigate('/manager/profile');
 	}
 
 	return (
@@ -41,14 +37,6 @@ export default function Header({ onToggleSidebar }) {
 			</div>
 
 			<div className="flex items-center gap-4">
-				{/* Notifications */}
-				<Button
-					icon={<Bell size={20} />}
-					className="p-button-text p-button-secondary relative"
-					onClick={handleNotificationsClick}
-					aria-label="Notifications"
-				/>
-
 				{/* User Profile */}
 				<div
 					className="flex items-center gap-3 cursor-pointer hover:bg-gray-100 rounded-lg p-2 transition-all duration-200"
@@ -56,10 +44,10 @@ export default function Header({ onToggleSidebar }) {
 				>
 					<div className="text-right hidden sm:block">
 						<div className="font-semibold text-gray-800 text-sm">
-							{currentUser?.name || 'User'}
+							{currentUser?.name || 'Nitigna Hihoriya'}
 						</div>
 						<div className="text-xs text-gray-500">
-							{currentUser?.company?.name || 'ExpenseTracker User'}
+							{currentUser?.company?.name || 'IT Department'}
 						</div>
 					</div>
 					<Avatar

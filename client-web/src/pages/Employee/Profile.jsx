@@ -1,4 +1,3 @@
-// pages/employee/EmployeeProfilePage.jsx
 import React, { useState } from 'react';
 import { Mail, Building, Phone, User, Calendar, Lock } from 'lucide-react';
 import PageLayout from '../../components/employeelayout/PageLayout';
@@ -11,6 +10,7 @@ const EmployeeProfile = () => {
 		department: 'IT',
 		designation: 'Software Engineer',
 		joiningDate: '2022-06-15',
+		company: { name: 'Odoo' },
 		profilePic:
 			'https://ui-avatars.com/api/?name=Jay+Gohil&background=22c55e&color=ffffff&size=150',
 	});
@@ -30,13 +30,12 @@ const EmployeeProfile = () => {
 	};
 
 	const handleResetPassword = () => {
-		alert('Reset password functionality triggered'); // replace with real logic
+		alert('Reset password functionality triggered');
 	};
 
 	return (
 		<PageLayout>
 			<div className="min-h-screen bg-gray-50 p-4 sm:p-8">
-				{/* Page Header */}
 				<div className="mb-8">
 					<h1 className="text-3xl font-bold text-gray-900">Employee Profile</h1>
 					<p className="text-gray-600 mt-2">
@@ -44,7 +43,7 @@ const EmployeeProfile = () => {
 					</p>
 				</div>
 
-				<div className=" rounded-2xl shadow-lg w-full max-w-4xl overflow-hidden flex flex-col md:flex-row mx-auto">
+				<div className="rounded-2xl shadow-lg w-full max-w-4xl overflow-hidden flex flex-col md:flex-row mx-auto">
 					{/* Left Side - Profile Picture */}
 					<div className="p-8 flex flex-col items-center border-b md:border-b-0 md:border-r border-gray-200 md:w-1/3 bg-white">
 						<div className="relative mb-6">
@@ -117,15 +116,15 @@ const EmployeeProfile = () => {
 								</div>
 							</div>
 
-							{/* Department */}
+							{/* Company */}
 							<div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
 								<div className="p-3 bg-purple-100 rounded-lg shadow-sm">
 									<Building size={22} className="text-purple-600" />
 								</div>
 								<div className="flex-1">
-									<p className="text-sm font-medium text-gray-600">Department</p>
+									<p className="text-sm font-medium text-gray-600">Company</p>
 									<p className="text-gray-900 font-semibold">
-										{employee.department}
+										{employee.company.name}
 									</p>
 								</div>
 							</div>
