@@ -1,29 +1,28 @@
-// pages/manager/ManagerDashboard.jsx
+// pages/employee/EmployeeDashboard.jsx
 import React, { useState, useEffect, useRef } from 'react';
-import PageLayout from '../../components/manager/PageLayout';
+import PageLayout from '../../components/employeelayout/PageLayout';
 import { Card } from 'primereact/card';
 import { Chart } from 'primereact/chart';
 import { Toast } from 'primereact/toast';
-import { Users, CheckCircle, XCircle, Clock, DollarSign, TrendingUp, FileText } from 'lucide-react';
+import { FileText, Clock, CheckCircle, XCircle, DollarSign, TrendingUp } from 'lucide-react';
 
-const Dashboard = () => {
+const EmployeeDashboard = () => {
 	const toast = useRef(null);
 	const [loading, setLoading] = useState(true);
 
-	// Manager-specific stats
+	// Employee statistics
 	const [stats, setStats] = useState({
-		totalTeamMembers: 24,
-		totalSubmittedExpenses: 320,
-		pendingExpenses: 40,
-		approvedExpenses: 250,
-		rejectedExpenses: 30,
-		totalAmountSubmitted: 45000,
-		totalAmountApproved: 35000,
-		totalAmountRejected: 5000,
-		totalAmountPending: 5000,
+		totalSubmitted: 3240,
+		pendingAmount: 1015,
+		approvedAmount: 1890,
+		rejectedAmount: 335,
+		totalExpenses: 15,
+		pendingExpenses: 3,
+		approvedExpenses: 10,
+		rejectedExpenses: 2,
 	});
 
-	// Expense status chart data
+	// Expense status chart
 	const expenseStatusData = {
 		labels: ['Approved', 'Pending', 'Rejected'],
 		datasets: [
@@ -51,32 +50,11 @@ const Dashboard = () => {
 		},
 	};
 
-	// Recent team expenses
+	// Recent expenses data
 	const recentExpenses = [
-		{
-			id: 1,
-			employee: 'John Doe',
-			category: 'Travel',
-			amount: 1200,
-			status: 'approved',
-			date: '2024-01-20',
-		},
-		{
-			id: 2,
-			employee: 'Jane Smith',
-			category: 'Meals',
-			amount: 200,
-			status: 'pending',
-			date: '2024-01-19',
-		},
-		{
-			id: 3,
-			employee: 'Bob Johnson',
-			category: 'Software',
-			amount: 500,
-			status: 'rejected',
-			date: '2024-01-18',
-		},
+		{ id: 1, category: 'Travel', amount: 450, status: 'approved', date: '2024-01-15' },
+		{ id: 2, category: 'Meals', amount: 85, status: 'pending', date: '2024-01-14' },
+		{ id: 3, category: 'Software', amount: 120, status: 'rejected', date: '2024-01-12' },
 	];
 
 	const getStatusIcon = (status) => {
@@ -114,72 +92,100 @@ const Dashboard = () => {
 	};
 
 	useEffect(() => {
-		setTimeout(() => setLoading(false), 1000);
+		setTimeout(() => {
+			setLoading(false);
+		}, 1000);
 	}, []);
-
-	const CardStat = ({ title, value, icon, bgColor, iconColor, subtitle }) => (
-		<Card
-			className={`shadow-md rounded-xl border-l-8 ${bgColor} p-5 hover:shadow-xl transition-all`}
-		>
-			<div className="flex items-center justify-between">
-				<div>
-					<p className="text-gray-500 font-medium">{title}</p>
-					<h2 className="text-3xl font-bold text-gray-800">{value}</h2>
-					{subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
-				</div>
-				<div className={`p-4 rounded-full ${iconColor} flex items-center justify-center`}>
-					{icon}
-				</div>
-			</div>
-		</Card>
-	);
 
 	return (
 		<PageLayout>
 			<Toast ref={toast} />
 			<div className="p-6 space-y-6">
 				{/* Header */}
-				<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-					<div>
-						<h1 className="text-3xl font-bold text-gray-800">Manager Dashboard</h1>
-						<p className="text-gray-500 mt-1">
-							Overview of team expenses and approvals
-						</p>
-					</div>
+				<div>
+					<h1 className="text-3xl font-bold text-gray-800">Employee Dashboard</h1>
+					<p className="text-gray-600">Your expense summary and tracking</p>
 				</div>
 
-				{/* Statistics Cards */}
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-					<CardStat
-						title="Total Submitted"
-						value={formatCurrency(stats.totalAmountSubmitted)}
-						subtitle={`${stats.totalSubmittedExpenses} expenses`}
-						icon={<DollarSign size={28} className="text-purple-600" />}
-						bgColor="border-purple-500"
-						iconColor="bg-purple-100"
-					/>
-					<CardStat
-						title="Approved"
-						value={formatCurrency(stats.totalAmountApproved)}
-						subtitle={`${stats.approvedExpenses} expenses`}
-						icon={<CheckCircle size={28} className="text-green-600" />}
-						bgColor="border-green-500"
-						iconColor="bg-green-100"
-					/>
-					<CardStat
-						title="Rejected"
-						value={formatCurrency(stats.totalAmountRejected)}
-						subtitle={`${stats.rejectedExpenses} expenses`}
-						icon={<XCircle size={28} className="text-red-600" />}
-						bgColor="border-red-500"
-						iconColor="bg-red-100"
-					/>
+				{/* Financial Summary Cards - Similar to your image */}
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+					{/* Total Submitted */}
+					<Card className="border-l-4 border-blue-500 shadow-lg">
+						<div className="flex items-center justify-between">
+							<div>
+								<p className="text-gray-500 font-medium">Total Submitted</p>
+								<h2 className="text-2xl font-bold text-gray-800">
+									{formatCurrency(stats.totalSubmitted)}
+								</h2>
+								<p className="text-sm text-gray-500 mt-1">
+									{stats.totalExpenses} expenses
+								</p>
+							</div>
+							<div className="p-3 bg-blue-100 rounded-full">
+								<DollarSign size={24} className="text-blue-600" />
+							</div>
+						</div>
+					</Card>
+
+					{/* Pending */}
+					<Card className="border-l-4 border-yellow-500 shadow-lg">
+						<div className="flex items-center justify-between">
+							<div>
+								<p className="text-gray-500 font-medium">Pending</p>
+								<h2 className="text-2xl font-bold text-gray-800">
+									{formatCurrency(stats.pendingAmount)}
+								</h2>
+								<p className="text-sm text-gray-500 mt-1">
+									{stats.pendingExpenses} expenses
+								</p>
+							</div>
+							<div className="p-3 bg-yellow-100 rounded-full">
+								<Clock size={24} className="text-yellow-600" />
+							</div>
+						</div>
+					</Card>
+
+					{/* Approved */}
+					<Card className="border-l-4 border-green-500 shadow-lg">
+						<div className="flex items-center justify-between">
+							<div>
+								<p className="text-gray-500 font-medium">Approved</p>
+								<h2 className="text-2xl font-bold text-gray-800">
+									{formatCurrency(stats.approvedAmount)}
+								</h2>
+								<p className="text-sm text-gray-500 mt-1">
+									{stats.approvedExpenses} expenses
+								</p>
+							</div>
+							<div className="p-3 bg-green-100 rounded-full">
+								<CheckCircle size={24} className="text-green-600" />
+							</div>
+						</div>
+					</Card>
+
+					{/* Rejected */}
+					<Card className="border-l-4 border-red-500 shadow-lg">
+						<div className="flex items-center justify-between">
+							<div>
+								<p className="text-gray-500 font-medium">Rejected</p>
+								<h2 className="text-2xl font-bold text-gray-800">
+									{formatCurrency(stats.rejectedAmount)}
+								</h2>
+								<p className="text-sm text-gray-500 mt-1">
+									{stats.rejectedExpenses} expenses
+								</p>
+							</div>
+							<div className="p-3 bg-red-100 rounded-full">
+								<XCircle size={24} className="text-red-600" />
+							</div>
+						</div>
+					</Card>
 				</div>
 
 				{/* Charts and Recent Expenses */}
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 					{/* Expense Status Chart */}
-					<Card className="shadow-lg rounded-xl">
+					<Card className="shadow-xl">
 						<div className="p-4 border-b border-gray-200">
 							<h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
 								<TrendingUp size={20} className="text-blue-500" />
@@ -195,12 +201,12 @@ const Dashboard = () => {
 						</div>
 					</Card>
 
-					{/* Recent Team Expenses */}
-					<Card className="shadow-lg rounded-xl">
+					{/* Recent Expenses */}
+					<Card className="shadow-xl">
 						<div className="p-4 border-b border-gray-200">
 							<h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
 								<FileText size={20} className="text-purple-500" />
-								Recent Team Expenses
+								Recent Expenses
 							</h3>
 						</div>
 						<div className="p-4">
@@ -214,7 +220,7 @@ const Dashboard = () => {
 											{getStatusIcon(expense.status)}
 											<div>
 												<p className="font-medium text-gray-800">
-													{expense.employee} - {expense.category}
+													{expense.category}
 												</p>
 												<p className="text-sm text-gray-500">
 													{new Date(expense.date).toLocaleDateString()}
@@ -245,4 +251,4 @@ const Dashboard = () => {
 	);
 };
 
-export default Dashboard;
+export default EmployeeDashboard;

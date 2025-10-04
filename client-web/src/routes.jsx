@@ -13,7 +13,7 @@ import Dashboard from './pages/Manager/Dashboard';
 import ApprovalsReview from './pages/manager/ApprovalsReview';
 import History from './pages/Manager/History';
 import Profile from './pages/manager/Profile';
-// import EmployeeDashboard from './pages/Employee/Dashboard';
+import EmployeeDashboard from './pages/Employee/EmployeeDashboard';
 import CreateExpense from './pages/Employee/createExpense';
 import ExpenseHistory from './pages/Employee/expenseHistory';
 
@@ -43,16 +43,16 @@ const routes = createBrowserRouter([
 		errorElement: <ErrorElement />,
 		children: [
 			{ path: 'dashboard', element: <AdminDashboard /> },
-			{ path: 'approval-rules', element: <ApprovalRule /> },
-			{ path: 'manage-expenses', element: <ManageExpenses /> },
-			{ path: 'manage-users', element: <UserManagement /> },
+			// { path: 'approval-rules', element: <ApprovalRule /> },
+			// { path: 'manage-expenses', element: <ManageExpenses /> },
+			// { path: 'manage-users', element: <UserManagement /> },
 		],
 	},
 	{
 		path: '/employee',
 		errorElement: <ErrorElement />,
 		children: [
-			// { path: 'dashboard', element: <EmployeeDashboard /> },
+			{ path: 'dashboard', element: <EmployeeDashboard /> },
 			{ path: 'create-expense', element: <CreateExpense /> },
 			{ path: 'expense-history', element: <ExpenseHistory /> },
 			// { path: 'milestone-form/:subsidyId', element: <MilestoneForm /> },
